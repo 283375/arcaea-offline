@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arcaea-offline"
+version = "0.1.0"
+authors = [{ name = "283375", email = "log_283375@163.com" }]
+description = "Caculate your B30 & R10 locally."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/283375/arcaea-offline"
+"Bug Tracker" = "https://github.com/283375/arcaea-offline/issues"
+
+[tool.isort]
+profile = "black"
+src_paths = ["src/arcaea_offline"]
+
+[tool.pyright]
+ignore = ["**/__debug*.*"]
