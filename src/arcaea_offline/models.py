@@ -124,7 +124,7 @@ class Score:
 
 
 @dataclass
-class DbCaculatedRow:
+class DbCalculatedRow:
     song_id: str
     rating_class: int
     score: int
@@ -139,7 +139,7 @@ class DbCaculatedRow:
 
 
 @dataclass(kw_only=True)
-class Caculated:
+class Calculated:
     song_id: str
     rating_class: int
     score: int
@@ -153,5 +153,5 @@ class Caculated:
     potential: float
 
     @classmethod
-    def from_db_row(cls, row: DbCaculatedRow):
+    def from_db_row(cls, row: DbCalculatedRow):
         return cls(**asdict(row))

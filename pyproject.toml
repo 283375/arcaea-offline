@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "arcaea-offline"
 version = "0.1.0"
 authors = [{ name = "283375", email = "log_283375@163.com" }]
-description = "Caculate your B30 & R10 locally."
+description = "Calculate your B30 & R10 locally."
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = []

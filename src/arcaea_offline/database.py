@@ -1,6 +1,6 @@
 import os
 from .utils.singleton import Singleton
-from .models import DbChartRow, DbPackageRow, DbScoreRow, DbCaculatedRow, DbAliasRow
+from .models import DbChartRow, DbPackageRow, DbScoreRow, DbCalculatedRow, DbAliasRow
 import sqlite3
 from typing import Union, List, Optional
 from dataclasses import fields, is_dataclass
@@ -134,7 +134,7 @@ class Database(metaclass=Singleton):
                 )
                 """,
                 """
-                CREATE VIEW IF NOT EXISTS caculated AS
+                CREATE VIEW IF NOT EXISTS calculated AS
                 SELECT
                     scores.song_id,
                     scores.rating_class,
@@ -280,14 +280,14 @@ class Database(metaclass=Singleton):
                 DbScoreRow(*row) for row in conn.execute(final_sql, params).fetchall()
             ]
 
-    def get_caculated(
+    def get_calculated(
         self,
         *,
         song_id: Optional[List[str]] = None,
         rating_class: Optional[List[int]] = None,
     ):
         with self.conn as conn:
-            columns = ",".join([f"[{field.name}]" for field in fields(DbCaculatedRow)])
+            columns = ",".join([f"[{field.name}]" for field in fields(DbCalculatedRow)])
             where_clauses = []
             params = []
             if song_id:
@@ -298,12 +298,12 @@ class Database(metaclass=Singleton):
                     f"rating_class IN ({','.join('?'*len(rating_class))})"
                 )
                 params.extend(rating_class)
-            final_sql = f"SELECT {columns} FROM caculated"
+            final_sql = f"SELECT {columns} FROM calculated"
             if where_clauses:
                 final_sql += " WHERE "
                 final_sql += " AND ".join(where_clauses)
             return [
-                DbCaculatedRow(*row)
+                DbCalculatedRow(*row)
                 for row in conn.execute(final_sql, params).fetchall()
             ]
 
@@ -317,7 +317,7 @@ class Database(metaclass=Singleton):
                     rating_class,
                     MAX(potential) AS max_potential
                 FROM
-                    caculated
+                    calculated
                 GROUP BY
                     song_id,
                     rating_class
@@ -329,7 +329,7 @@ class Database(metaclass=Singleton):
                     SELECT
                         c.*
                     FROM
-                        caculated c
+                        calculated c
                         JOIN max_potential m ON c.song_id = m.song_id AND c.rating_class = m.rating_class AND c.potential = m.max_potential
                     ORDER BY
                         potential DESC
