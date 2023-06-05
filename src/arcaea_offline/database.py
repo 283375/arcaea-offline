@@ -1,9 +1,10 @@
 import os
-from .utils.singleton import Singleton
-from .models import DbChartRow, DbPackageRow, DbScoreRow, DbCalculatedRow, DbAliasRow
 import sqlite3
-from typing import Union, List, Optional
 from dataclasses import fields, is_dataclass
+from typing import List, Optional, Union
+
+from .models import DbAliasRow, DbCalculatedRow, DbChartRow, DbPackageRow, DbScoreRow
+from .utils.singleton import Singleton
 
 
 class Database(metaclass=Singleton):
@@ -160,6 +161,50 @@ class Database(metaclass=Singleton):
                     scores.song_id,
                     scores.rating_class
                 """,
+                """
+                CREATE VIEW IF NOT EXISTS recent_10 AS
+                SELECT
+                    c.song_id,
+                    c.rating_class,
+                    MAX(c.potential) AS potential
+                FROM
+                    calculated c
+                WHERE
+                    c.time IN (
+                        SELECT DISTINCT time
+                        FROM calculated
+                        ORDER BY time DESC
+                        LIMIT 10
+                    )
+                GROUP BY
+                    c.song_id,
+                    c.rating_class
+                """,
+                """
+                CREATE VIEW IF NOT EXISTS best_30 AS
+                SELECT
+                    c.song_id,
+                    c.rating_class,
+                    MAX(c.potential) AS potential
+                FROM
+                    calculated c
+                GROUP BY
+                    c.song_id,
+                    c.rating_class
+                ORDER BY
+                    potential DESC
+                LIMIT 30
+                """,
+                """
+                CREATE VIEW IF NOT EXISTS calculated_potential AS
+                SELECT
+                    AVG(r10.potential) AS r10,
+                    AVG(b30.potential) AS b30,
+                    (SUM(r10.potential) + SUM(b30.potential)) / (COUNT(r10.potential) + COUNT(b30.potential)) AS potential 
+                FROM
+                    recent_10 r10,
+                    best_30 b30
+                """,
             ]
 
             for sql in create_sqls:
@@ -309,35 +354,15 @@ class Database(metaclass=Singleton):
 
     def get_b30(self) -> float:
         with self.conn as conn:
-            return conn.execute(
-                """
-            WITH max_potential AS (
-                SELECT
-                    song_id,
-                    rating_class,
-                    MAX(potential) AS max_potential
-                FROM
-                    calculated
-                GROUP BY
-                    song_id,
-                    rating_class
-            )
-            SELECT
-                SUM(potential) / (COUNT(potential) * 1.0) AS b30
-            FROM
-                (
-                    SELECT
-                        c.*
-                    FROM
-                        calculated c
-                        JOIN max_potential m ON c.song_id = m.song_id AND c.rating_class = m.rating_class AND c.potential = m.max_potential
-                    ORDER BY
-                        potential DESC
-                    LIMIT 30
-                ) AS top_30
+            return conn.execute("SELECT b30 FROM calculated_potential").fetchone()[0]
 
-            """
-            ).fetchone()[0]
+    def get_r10(self) -> float:
+        with self.conn as conn:
+            return conn.execute("SELECT r10 FROM calculated_potential").fetchone()[0]
+
+    def get_potential(self) -> float:
+        with self.conn as conn:
+            return conn.execute("SELECT potential FROM calculated_potential").fetchone()[0]
 
     def insert_score(self, score: DbScoreRow):
         columns = self.__get_columns_from_dataclass(DbScoreRow)
