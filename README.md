@@ -1,6 +1,6 @@
 # Arcaea Offline
 
-> 接受 <i>lr<sub>lowiro</sub></i> 的一切
+> 接受 <i><b>lr</b><sub>lowiro</sub></i> 的一切
 
 ![Excel | Eternity](./assets/excel_eternity.png "Excel | Eternity")
 
