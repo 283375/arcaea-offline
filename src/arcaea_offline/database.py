@@ -198,12 +198,12 @@ class Database(metaclass=Singleton):
                 """
                 CREATE VIEW IF NOT EXISTS calculated_potential AS
                 SELECT
-                    AVG(r10.potential) AS r10,
-                    AVG(b30.potential) AS b30,
-                    (SUM(r10.potential) + SUM(b30.potential)) / (COUNT(r10.potential) + COUNT(b30.potential)) AS potential 
+                    r10_avg AS r10,
+                    b30_avg AS b30,
+                    (r10_sum + b30_sum) / (r10_count + b30_count) AS potential
                 FROM
-                    recent_10 r10,
-                    best_30 b30
+                    (SELECT SUM(potential) AS r10_sum, AVG(potential) AS r10_avg, COUNT(*) AS r10_count FROM recent_10) r10,
+                    (SELECT SUM(potential) AS b30_sum, AVG(potential) AS b30_avg, COUNT(*) AS b30_count FROM best_30) b30
                 """,
             ]
 
