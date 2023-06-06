@@ -1,7 +1,10 @@
 import os
 import sqlite3
 from dataclasses import fields, is_dataclass
-from typing import List, Optional, Union
+from typing import List, NamedTuple, Optional, Union
+
+from thefuzz import fuzz
+from thefuzz import process as fuzz_process
 
 from .models import DbAliasRow, DbCalculatedRow, DbChartRow, DbPackageRow, DbScoreRow
 from .utils.singleton import Singleton
@@ -205,6 +208,21 @@ class Database(metaclass=Singleton):
                     (SELECT SUM(potential) AS r10_sum, AVG(potential) AS r10_avg, COUNT(*) AS r10_count FROM recent_10) r10,
                     (SELECT SUM(potential) AS b30_sum, AVG(potential) AS b30_avg, COUNT(*) AS b30_count FROM best_30) b30
                 """,
+                """
+                CREATE VIEW IF NOT EXISTS song_id_names AS
+                SELECT song_id, name
+                FROM (
+                    SELECT song_id, alias AS name FROM aliases
+                    UNION ALL
+                    SELECT song_id, song_id AS name FROM charts
+                    UNION ALL
+                    SELECT song_id, name_en AS name FROM charts
+                    UNION ALL
+                    SELECT song_id, name_jp AS name FROM charts
+                ) AS subquery
+                WHERE name IS NOT NULL AND name <> ''
+                GROUP BY song_id, name
+                """
             ]
 
             for sql in create_sqls:
@@ -298,6 +316,26 @@ class Database(metaclass=Singleton):
                     (package_id,),
                 ).fetchall()
             ]
+
+    class FuzzySearchSongIdResult(NamedTuple):
+        song_id: str
+        confidence: int
+
+    def fuzzy_search_song_id(self, input_str: str, limit: int= 5) -> List[FuzzySearchSongIdResult]:
+        with self.conn as conn:
+            db_results = conn.execute("SELECT song_id, name FROM song_id_names").fetchall()
+        name_song_id_map = {r[1]: r[0] for r in db_results}
+        names = name_song_id_map.keys()
+        fuzzy_results = fuzz_process.extractBests(input_str, names, scorer=fuzz.partial_ratio, limit=limit)  # type: ignore
+        results = {}
+        for fuzzy_result  in fuzzy_results:
+            name = fuzzy_result[0]
+            confidence = fuzzy_result[1]
+            song_id = name_song_id_map[name]
+            results[song_id] = max(confidence, results.get(song_id, 0))
+
+        return [self.FuzzySearchSongIdResult(si, confi) for si, confi in results.items()]
+
 
     def get_scores(
         self,
