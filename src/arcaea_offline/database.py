@@ -146,17 +146,17 @@ class Database(metaclass=Singleton):
                 scores.time,
                 charts.rating,
                 charts.note,
-                CAST ( ROUND( score - ( pure * 10000000 / note ) - ( far * 0.5 * 10000000 / note ) ) AS INTEGER ) AS pure_small,
+                score - FLOOR(( pure * 10000000.0 / note ) + ( far * 0.5 * 10000000.0 / note )) AS pure_small,
                 CASE
                     WHEN score >= 10000000 THEN
-                    rating / 10.0 + 2 
+                    rating / 10.0 + 2
                     WHEN score >= 9800000 THEN
-                    rating / 10.0 + 1 + ( score - 9800000 ) / 200000.0 ELSE MAX( rating / 10.0, 0 ) + ( score - 9500000 ) / 300000.0 
-                END AS potential 
+                    rating / 10.0 + 1 + ( score - 9800000 ) / 200000.0 ELSE MAX( rating / 10.0, 0 ) + ( score - 9500000 ) / 300000.0
+                END AS potential
             FROM
                 scores
-                LEFT JOIN charts ON scores.rating_class = charts.rating_class 
-                AND scores.song_id = charts.song_id 
+                LEFT JOIN charts ON scores.rating_class = charts.rating_class
+                AND scores.song_id = charts.song_id
             GROUP BY
                 scores.song_id,
                 scores.rating_class
