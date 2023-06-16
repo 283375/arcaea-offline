@@ -195,18 +195,6 @@ class Database(metaclass=Singleton):
             cursor = conn.cursor()
             return cursor.execute("SELECT b30 FROM calculated_potential").fetchone()[0]
 
-    def get_r10(self) -> float:
-        with self.conn as conn:
-            cursor = conn.cursor()
-            return cursor.execute("SELECT r10 FROM calculated_potential").fetchone()[0]
-
-    def get_potential(self) -> float:
-        with self.conn as conn:
-            cursor = conn.cursor()
-            return cursor.execute(
-                "SELECT potential FROM calculated_potential"
-            ).fetchone()[0]
-
     def insert_score(self, score: DbScoreRow):
         columns = self.__get_columns_from_dataclass(DbScoreRow)
         columns_clause = self.__get_columns_clause(columns)

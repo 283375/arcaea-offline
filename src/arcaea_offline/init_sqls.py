@@ -98,25 +98,6 @@ INIT_SQLS: Dict[int, VersionSqls] = {
                 scores.rating_class
             """,
             """
-            CREATE VIEW IF NOT EXISTS recent_10 AS
-            SELECT
-                c.song_id,
-                c.rating_class,
-                MAX(c.potential) AS potential
-            FROM
-                calculated c
-            WHERE
-                c.time IN (
-                    SELECT DISTINCT time
-                    FROM calculated
-                    ORDER BY time DESC
-                    LIMIT 10
-                )
-            GROUP BY
-                c.song_id,
-                c.rating_class
-            """,
-            """
             CREATE VIEW IF NOT EXISTS best_30 AS
             SELECT
                 c.song_id,
@@ -130,31 +111,6 @@ INIT_SQLS: Dict[int, VersionSqls] = {
             ORDER BY
                 potential DESC
             LIMIT 30
-            """,
-            """
-            CREATE VIEW IF NOT EXISTS calculated_potential AS
-            SELECT
-                r10_avg AS r10,
-                b30_avg AS b30,
-                (r10_sum + b30_sum) / (r10_count + b30_count) AS potential
-            FROM
-                (SELECT SUM(potential) AS r10_sum, AVG(potential) AS r10_avg, COUNT(*) AS r10_count FROM recent_10) r10,
-                (SELECT SUM(potential) AS b30_sum, AVG(potential) AS b30_avg, COUNT(*) AS b30_count FROM best_30) b30
-            """,
-            """
-            CREATE VIEW IF NOT EXISTS song_id_names AS
-            SELECT song_id, name
-            FROM (
-                SELECT song_id, alias AS name FROM aliases
-                UNION ALL
-                SELECT song_id, song_id AS name FROM charts
-                UNION ALL
-                SELECT song_id, name_en AS name FROM charts
-                UNION ALL
-                SELECT song_id, name_jp AS name FROM charts
-            ) AS subquery
-            WHERE name IS NOT NULL AND name <> ''
-            GROUP BY song_id, name
             """,
         ],
         "update": [],
