@@ -104,6 +104,12 @@ class Database(metaclass=Singleton):
     def get_packages(self):
         return self.__get_table("packages", DbPackageRow)
 
+    def get_package_by_package_id(self, package_id: str):
+        result = self.__get_table(
+            "packages", DbPackageRow, "package_id = ?", (package_id,)
+        )
+        return result[0] if result else None
+
     def get_aliases(self):
         return self.__get_table("aliases", DbAliasRow)
 
