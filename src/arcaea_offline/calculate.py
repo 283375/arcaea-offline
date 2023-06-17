@@ -5,6 +5,15 @@ from typing import Dict, List
 from .models import Calculated, Chart, Score
 
 
+def calculate_score_range(chart: Chart, pure: int, far: int):
+    single_note_score = 10000000 / Decimal(chart.note)
+
+    actual_score = floor(
+        single_note_score * pure + single_note_score * Decimal(0.5) * far
+    )
+    return (actual_score, actual_score + pure)
+
+
 def calculate_score(chart: Chart, score: Score) -> Calculated:
     assert chart.song_id == score.song_id
     assert chart.rating_class == score.rating_class
