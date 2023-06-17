@@ -112,6 +112,28 @@ INIT_SQLS: Dict[int, VersionSqls] = {
                 potential DESC
             LIMIT 30
             """,
+            """
+            CREATE VIEW IF NOT EXISTS calculated_potential AS
+            SELECT
+                b30_avg AS b30
+            FROM
+                (SELECT SUM(potential) AS b30_sum, AVG(potential) AS b30_avg, COUNT(*) AS b30_count FROM best_30) b30
+            """,
+            """
+            CREATE VIEW IF NOT EXISTS song_id_names AS
+            SELECT song_id, name
+            FROM (
+                SELECT song_id, alias AS name FROM aliases
+                UNION ALL
+                SELECT song_id, song_id AS name FROM charts
+                UNION ALL
+                SELECT song_id, name_en AS name FROM charts
+                UNION ALL
+                SELECT song_id, name_jp AS name FROM charts
+            ) AS subquery
+            WHERE name IS NOT NULL AND name <> ''
+            GROUP BY song_id, name
+            """,
         ],
         "update": [],
     }
