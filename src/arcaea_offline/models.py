@@ -120,7 +120,7 @@ class Score:
     def to_db_row(self):
         keys = list(self.__dataclass_fields__)
         values = [self.__getattribute__(key) for key in keys]
-        return DbChartRow(*values)
+        return DbScoreRow(*values)
 
 
 @dataclass
