@@ -92,26 +92,30 @@ class Package:
 
 @dataclass
 class DbScoreRow:
+    id: int
     song_id: str
     rating_class: int
     score: int
-    pure: int
-    far: int
-    lost: int
+    pure: Optional[int]
+    far: Optional[int]
+    lost: Optional[int]
     time: int
-    max_recall: Optional[int] = None
+    max_recall: Optional[int]
+    clear_type: Optional[int]
 
 
 @dataclass(kw_only=True)
 class Score:
+    id: int
     song_id: str
     rating_class: int
     score: int
-    pure: int
-    far: int
-    lost: int
+    pure: Optional[int]
+    far: Optional[int]
+    lost: Optional[int]
     time: int
-    max_recall: Optional[int] = None
+    max_recall: Optional[int]
+    clear_type: Optional[int]
 
     @classmethod
     def from_db_row(cls, row: DbScoreRow):
@@ -125,31 +129,33 @@ class Score:
 
 @dataclass
 class DbCalculatedRow:
+    id: int
     song_id: str
     rating_class: int
     score: int
-    pure: int
-    far: int
-    lost: int
+    pure: Optional[int]
+    far: Optional[int]
+    lost: Optional[int]
     time: int
     rating: int
     note: int
-    pure_small: int
+    pure_small: Optional[int]
     potential: float
 
 
 @dataclass(kw_only=True)
 class Calculated:
+    id: int
     song_id: str
     rating_class: int
     score: int
-    pure: int
-    far: int
-    lost: int
+    pure: Optional[int]
+    far: Optional[int]
+    lost: Optional[int]
     time: int
     rating: int
     note: int
-    pure_small: int
+    pure_small: Optional[int]
     potential: float
 
     @classmethod

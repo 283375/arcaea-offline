@@ -75,6 +75,7 @@ INIT_SQLS: Dict[int, VersionSqls] = {
             """
             CREATE VIEW IF NOT EXISTS calculated AS
             SELECT
+                scores.id,
                 scores.song_id,
                 scores.rating_class,
                 scores.score,
@@ -96,8 +97,7 @@ INIT_SQLS: Dict[int, VersionSqls] = {
                 LEFT JOIN charts ON scores.rating_class = charts.rating_class
                 AND scores.song_id = charts.song_id
             GROUP BY
-                scores.song_id,
-                scores.rating_class
+                scores.id
             """,
             """
             CREATE VIEW IF NOT EXISTS bests AS
