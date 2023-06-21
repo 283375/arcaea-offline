@@ -127,6 +127,19 @@ class Score:
         return DbScoreRow(*values)
 
 
+@dataclass(kw_only=True)
+class ScoreInsert:
+    song_id: str
+    rating_class: int
+    score: int
+    time: int
+    pure: Optional[int] = None
+    far: Optional[int] = None
+    lost: Optional[int] = None
+    max_recall: Optional[int] = None
+    clear_type: Optional[int] = None
+
+
 @dataclass
 class DbCalculatedRow:
     id: int
