@@ -9,6 +9,7 @@ class VersionSqls(TypedDict):
 INIT_SQLS: Dict[int, VersionSqls] = {
     1: {
         "init": [
+            # region CREATE
             """
             CREATE TABLE IF NOT EXISTS charts (
                 song_id          TEXT    NOT NULL,
@@ -55,11 +56,12 @@ INIT_SQLS: Dict[int, VersionSqls] = {
                 song_id            TEXT NOT NULL,
                 rating_class       INTEGER NOT NULL,
                 score              INTEGER NOT NULL,
-                pure               INTEGER NOT NULL,
-                far                INTEGER NOT NULL,
-                lost               INTEGER NOT NULL,
+                pure               INTEGER,
+                far                INTEGER,
+                lost               INTEGER,
                 time               INTEGER NOT NULL,
                 max_recall         INTEGER,
+                clear_type         INTEGER,
 
                 FOREIGN KEY (song_id, rating_class) REFERENCES charts(song_id, rating_class) ON UPDATE CASCADE ON DELETE NO ACTION
             )
@@ -98,7 +100,7 @@ INIT_SQLS: Dict[int, VersionSqls] = {
                 scores.rating_class
             """,
             """
-            CREATE VIEW IF NOT EXISTS best_30 AS
+            CREATE VIEW IF NOT EXISTS bests AS
             SELECT
                 c.song_id,
                 c.rating_class,
@@ -110,14 +112,13 @@ INIT_SQLS: Dict[int, VersionSqls] = {
                 c.rating_class
             ORDER BY
                 potential DESC
-            LIMIT 30
             """,
             """
             CREATE VIEW IF NOT EXISTS calculated_potential AS
             SELECT
                 b30_avg AS b30
             FROM
-                (SELECT SUM(potential) AS b30_sum, AVG(potential) AS b30_avg, COUNT(*) AS b30_count FROM best_30) b30
+                ( SELECT AVG(potential) AS b30_avg FROM bests ORDER BY potential DESC LIMIT 30 )
             """,
             """
             CREATE VIEW IF NOT EXISTS song_id_names AS
@@ -134,6 +135,12 @@ INIT_SQLS: Dict[int, VersionSqls] = {
             WHERE name IS NOT NULL AND name <> ''
             GROUP BY song_id, name
             """,
+            # endregion
+            # region INSERT
+            """
+            INSERT INTO properties VALUES ('db_version', '1')
+            """
+            # endregion
         ],
         "update": [],
     }
