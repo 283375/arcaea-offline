@@ -90,7 +90,8 @@ INIT_SQLS: Dict[int, VersionSqls] = {
                     WHEN score >= 10000000 THEN
                     rating / 10.0 + 2
                     WHEN score >= 9800000 THEN
-                    rating / 10.0 + 1 + ( score - 9800000 ) / 200000.0 ELSE MAX( rating / 10.0, 0 ) + ( score - 9500000 ) / 300000.0
+                    rating / 10.0 + 1 + ( score - 9800000 ) / 200000.0
+                    ELSE MAX(( rating / 10.0 ) + ( score - 9500000 ) / 300000.0, 0)
                 END AS potential
             FROM
                 scores
