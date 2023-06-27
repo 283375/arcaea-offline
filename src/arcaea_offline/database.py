@@ -1,3 +1,4 @@
+import atexit
 import os
 import sqlite3
 from dataclasses import fields, is_dataclass
@@ -29,6 +30,8 @@ class Database(metaclass=Singleton):
         self.__conn = sqlite3.connect(os.path.join(self.dbDir, self.dbFilename))
         self.__conn.execute("PRAGMA journal_mode = WAL;")
         self.__conn.execute("PRAGMA foreign_keys = ON;")
+
+        atexit.register(self.__conn.close)
 
         self.__update_hooks = []
 
