@@ -208,11 +208,15 @@ class Database(metaclass=Singleton):
     def get_scores(
         self,
         *,
+        score_id: Optional[int] = None,
         song_id: Optional[List[str]] = None,
         rating_class: Optional[List[int]] = None,
     ):
         where_clauses = []
         params = []
+        if score_id:
+            where_clauses.append("id = ?")
+            params.append(score_id)
         if song_id:
             where_clauses.append(f"song_id IN ({','.join('?'*len(song_id))})")
             params.extend(song_id)
@@ -256,6 +260,23 @@ class Database(metaclass=Singleton):
             cursor = conn.cursor()
             cursor.execute(
                 f"INSERT INTO scores({columns_clause}) VALUES ({', '.join('?' * len(params))})",
+                params,
+            )
+            conn.commit()
+            self.__trigger_update_hooks()
+
+    def update_score(self, score_id: int, new_score: ScoreInsert):
+        # ensure we are only updating 1 row
+        scores = self.get_scores(score_id=score_id)
+        print(score_id)
+        assert len(scores) == 1, "Cannot update multiple or non-existing score(s)"
+        columns = self.__get_columns_from_dataclass(ScoreInsert)
+        params = [getattr(new_score, column) for column in columns] + [score_id]
+        update_columns_param_clause = ", ".join([f"{column} = ?" for column in columns])
+        with self.conn as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                f"UPDATE scores SET {update_columns_param_clause} WHERE id = ?",
                 params,
             )
             conn.commit()
