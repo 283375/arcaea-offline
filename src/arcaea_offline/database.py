@@ -260,3 +260,10 @@ class Database(metaclass=Singleton):
             )
             conn.commit()
             self.__trigger_update_hooks()
+
+    def delete_score(self, score_id: int):
+        with self.conn as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM scores WHERE id = ?", (score_id,))
+            conn.commit()
+            self.__trigger_update_hooks()
