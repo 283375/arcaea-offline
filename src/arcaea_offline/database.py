@@ -151,6 +151,14 @@ class Database(metaclass=Singleton):
     def get_charts_by_package_id(self, package_id: str):
         return self.__get_table("charts", DbChartRow, "package_id = ?", (package_id,))
 
+    def get_chart(self, song_id: str, rating_class: int):
+        return self.__get_table(
+            "charts",
+            DbChartRow,
+            "song_id = ? AND rating_class = ?",
+            (song_id, rating_class),
+        )[0]
+
     def validate_song_id(self, song_id):
         with self.conn as conn:
             cursor = conn.cursor()
