@@ -36,6 +36,7 @@ def calculate_score(chart: Chart, score: Score) -> Calculated:
     assert isinstance(potential, Decimal)
 
     return Calculated(
+        id=score.id,
         song_id=chart.song_id,
         rating_class=chart.rating_class,
         score=score.score,
