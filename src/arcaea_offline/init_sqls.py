@@ -117,9 +117,9 @@ INIT_SQLS: Dict[int, VersionSqls] = {
             """
             CREATE VIEW IF NOT EXISTS calculated_potential AS
             SELECT
-                b30_avg AS b30
+                AVG(b30_ptt) AS b30
             FROM
-                ( SELECT AVG(potential) AS b30_avg FROM bests ORDER BY potential DESC LIMIT 30 )
+                ( SELECT potential AS b30_ptt FROM bests ORDER BY potential DESC LIMIT 30 )
             """,
             """
             CREATE VIEW IF NOT EXISTS song_id_names AS
