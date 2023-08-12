@@ -8,6 +8,7 @@ from typing import Callable, List, NamedTuple, Optional, TypeVar, Union
 from thefuzz import fuzz
 from thefuzz import process as fuzz_process
 
+from .external import ExternalScoreItem
 from .init_sqls import INIT_SQLS
 from .models import (
     DbAliasRow,
@@ -115,6 +116,30 @@ class Database(metaclass=Singleton):
                 )
             conn.commit()
         self.__trigger_update_hooks()
+
+    @check_conn
+    def import_external(self, external_scores: List[ExternalScoreItem]):
+        for external in external_scores:
+            # 2017 Jan. 22, 00:00, UTC+8
+            time = external.time if external.time > -1 else 1485014400
+            pure = external.pure if external.pure > -1 else None
+            far = external.far if external.far > -1 else None
+            lost = external.lost if external.lost > -1 else None
+            max_recall = external.max_recall if external.max_recall > -1 else None
+            clear_type = external.clear_type if external.clear_type > -1 else None
+
+            score = ScoreInsert(
+                song_id=external.song_id,
+                rating_class=external.rating_class,
+                score=external.score,
+                time=time,
+                pure=pure,
+                far=far,
+                lost=lost,
+                max_recall=max_recall,
+                clear_type=clear_type,
+            )
+            self.insert_score(score)
 
     @check_conn
     def init(self):
