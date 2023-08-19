@@ -43,7 +43,7 @@ class St3ScoreSource(ExternalScoreSource):
                 clear_type = self.CLEAR_TYPES_MAP[db_clear_type]
 
                 date_str = str(date)
-                date = None if len(date_str) < 7 else int(date_str.ljust(11, "0"))
+                date = None if len(date_str) < 7 else int(date_str.ljust(10, "0"))
 
                 kwargs = {
                     "song_id": song_id,
