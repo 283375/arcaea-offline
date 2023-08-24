@@ -1,24 +1,7 @@
-import dataclasses
 import sqlite3
-from typing import List, Union
+from typing import Union
 
-
-@dataclasses.dataclass
-class ExternalScoreItem:
-    song_id: str
-    rating_class: int
-    score: int
-    pure: int = -1
-    far: int = -1
-    lost: int = -1
-    max_recall: int = -1
-    clear_type: int = -1
-    time: int = -1
-
-
-class ExternalScoreSource:
-    def get_score_items(self) -> List[ExternalScoreItem]:
-        ...
+from .common import ExternalScoreItem, ExternalScoreSource
 
 
 class St3ScoreSource(ExternalScoreSource):
