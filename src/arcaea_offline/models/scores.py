@@ -4,7 +4,7 @@ from sqlalchemy import TEXT, case, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy_utils import create_view
 
-from .models_songs import Chart, ChartInfo
+from .songs import Chart, ChartInfo
 
 
 class ScoresBase(DeclarativeBase):
