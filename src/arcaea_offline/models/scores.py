@@ -6,6 +6,14 @@ from sqlalchemy_utils import create_view
 
 from .songs import Chart, ChartInfo
 
+__all__ = [
+    "ScoresBase",
+    "Score",
+    "Calculated",
+    "Best",
+    "CalculatedPotential",
+]
+
 
 class ScoresBase(DeclarativeBase):
     pass

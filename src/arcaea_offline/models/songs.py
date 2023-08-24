@@ -3,16 +3,20 @@ from typing import Optional
 from sqlalchemy import TEXT, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
+__all__ = [
+    "SongsBase",
+    "Pack",
+    "PackLocalized",
+    "Song",
+    "SongLocalized",
+    "Chart",
+    "ChartLocalized",
+    "ChartInfo",
+]
+
 
 class SongsBase(DeclarativeBase):
     pass
-
-
-class Property(SongsBase):
-    __tablename__ = "property"
-
-    id: Mapped[str] = mapped_column(TEXT(), primary_key=True)
-    value: Mapped[str] = mapped_column(TEXT())
 
 
 class Pack(SongsBase):
