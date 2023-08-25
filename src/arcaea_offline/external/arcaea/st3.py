@@ -11,7 +11,7 @@ class St3ScoreParser(ArcaeaParser):
     def __init__(self, filepath):
         super().__init__(filepath)
 
-    def get_score_items(self) -> List[Score]:
+    def parse(self) -> List[Score]:
         items = []
         with sqlite3.connect(self.filepath) as st3_conn:
             cursor = st3_conn.cursor()
