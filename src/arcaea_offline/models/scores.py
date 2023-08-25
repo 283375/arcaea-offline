@@ -9,6 +9,7 @@ from .songs import Chart, ChartInfo
 __all__ = [
     "ScoresBase",
     "Score",
+    "ScoresViewBase",
     "Calculated",
     "Best",
     "CalculatedPotential",
@@ -41,7 +42,11 @@ class Score(ScoresBase):
 # CC BY-SA 4.0
 
 
-class Calculated(ScoresBase):
+class ScoresViewBase(DeclarativeBase):
+    pass
+
+
+class Calculated(ScoresViewBase):
     score_id: Mapped[str]
     song_id: Mapped[str]
     rating_class: Mapped[int]
@@ -98,11 +103,11 @@ class Calculated(ScoresBase):
             (Chart.song_id == Score.song_id)
             & (Chart.rating_class == Score.rating_class),
         ),
-        metadata=ScoresBase.metadata,
+        metadata=ScoresViewBase.metadata,
     )
 
 
-class Best(ScoresBase):
+class Best(ScoresViewBase):
     score_id: Mapped[str]
     song_id: Mapped[str]
     rating_class: Mapped[int]
@@ -125,11 +130,11 @@ class Best(ScoresBase):
         .select_from(Calculated)
         .group_by(Calculated.song_id, Calculated.rating_class)
         .order_by(Calculated.potential.desc()),
-        metadata=ScoresBase.metadata,
+        metadata=ScoresViewBase.metadata,
     )
 
 
-class CalculatedPotential(ScoresBase):
+class CalculatedPotential(ScoresViewBase):
     b30: Mapped[float]
 
     _select_bests_subquery = (
@@ -141,5 +146,5 @@ class CalculatedPotential(ScoresBase):
     __table__ = create_view(
         name="calculated_potential",
         selectable=select(func.avg(_select_bests_subquery.c.b30_sum).label("b30")),
-        metadata=ScoresBase.metadata,
+        metadata=ScoresViewBase.metadata,
     )
