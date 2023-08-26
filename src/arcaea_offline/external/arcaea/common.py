@@ -2,7 +2,6 @@ import json
 from os import PathLike
 from typing import Any, List, Optional, Union
 
-from sqlalchemy import Engine
 from sqlalchemy.orm import DeclarativeBase, Session
 
 
@@ -47,9 +46,7 @@ class ArcaeaParser:
     def parse(self) -> List[DeclarativeBase]:
         ...
 
-    def write_database(self, engine: Engine):
-        with Session(engine) as session:
-            results = self.parse()
-            for result in results:
-                session.merge(result)
-            session.commit()
+    def write_database(self, session: Session):
+        results = self.parse()
+        for result in results:
+            session.merge(result)

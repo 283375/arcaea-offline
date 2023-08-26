@@ -1,7 +1,6 @@
 import sqlite3
 from typing import List
 
-from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 
 from ...models.songs import ChartInfo
@@ -29,9 +28,7 @@ class ArcsongDbParser:
 
         return results
 
-    def write_database(self, engine: Engine):
-        with Session(engine) as session:
-            results = self.parse()
-            for result in results:
-                session.merge(result)
-            session.commit()
+    def write_database(self, session: Session):
+        results = self.parse()
+        for result in results:
+            session.merge(result)
