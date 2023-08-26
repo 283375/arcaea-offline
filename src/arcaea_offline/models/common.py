@@ -1,18 +1,32 @@
-from sqlalchemy import TEXT
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-
-__all__ = [
-    "CommonBase",
-    "Property",
-]
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm.exc import DetachedInstanceError
 
 
-class CommonBase(DeclarativeBase):
-    pass
+class ReprHelper:
+    def _repr(self, **kwargs) -> str:
+        """
+        Helper for __repr__
 
+        https://stackoverflow.com/a/55749579/16484891
 
-class Property(CommonBase):
-    __tablename__ = "property"
+        CC BY-SA 4.0
+        """
+        field_strings = []
+        at_least_one_attached_attribute = False
+        for key, field in kwargs.items():
+            try:
+                field_strings.append(f"{key}={field!r}")
+            except DetachedInstanceError:
+                field_strings.append(f"{key}=DetachedInstanceError")
+            else:
+                at_least_one_attached_attribute = True
+        if at_least_one_attached_attribute:
+            return f"<{self.__class__.__name__}({','.join(field_strings)})>"
+        return f"<{self.__class__.__name__} {id(self)}>"
 
-    key: Mapped[str] = mapped_column(TEXT(), primary_key=True)
-    value: Mapped[str] = mapped_column(TEXT())
+    def __repr__(self):
+        if isinstance(self, DeclarativeBase):
+            return self._repr(
+                **{c.key: getattr(self, c.key) for c in self.__table__.columns}
+            )
+        return super().__repr__()

@@ -1,7 +1,7 @@
 from sqlalchemy import Engine, select
 from sqlalchemy.orm import sessionmaker
 
-from .models.common import *
+from .models.config import *
 from .models.scores import *
 from .models.songs import *
 from .singleton import Singleton
@@ -37,7 +37,7 @@ class Database(metaclass=Singleton):
         SongsBase.metadata.create_all(self.engine, checkfirst=checkfirst)
         ScoresBase.metadata.create_all(self.engine, checkfirst=checkfirst)
         ScoresViewBase.metadata.create_all(self.engine)
-        CommonBase.metadata.create_all(self.engine, checkfirst=checkfirst)
+        ConfigBase.metadata.create_all(self.engine, checkfirst=checkfirst)
 
         # insert version property
         with self.sessionmaker() as session:

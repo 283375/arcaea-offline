@@ -3,6 +3,8 @@ from typing import Optional
 from sqlalchemy import TEXT, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
+from .common import ReprHelper
+
 __all__ = [
     "SongsBase",
     "Pack",
@@ -15,7 +17,7 @@ __all__ = [
 ]
 
 
-class SongsBase(DeclarativeBase):
+class SongsBase(DeclarativeBase, ReprHelper):
     pass
 
 
