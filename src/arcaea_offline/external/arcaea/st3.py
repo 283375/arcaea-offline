@@ -1,8 +1,14 @@
+import logging
 import sqlite3
 from typing import List
 
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from ...models.scores import Score
 from .common import ArcaeaParser
+
+logger = logging.getLogger(__name__)
 
 
 class St3ScoreParser(ArcaeaParser):
@@ -42,3 +48,22 @@ class St3ScoreParser(ArcaeaParser):
                 )
 
         return items
+
+    def write_database(self, session: Session, *, skip_duplicate=True):
+        parsed_scores = self.parse()
+        for parsed_score in parsed_scores:
+            query_score = session.scalar(
+                select(Score).where(
+                    (Score.song_id == parsed_score.song_id)
+                    & (Score.rating_class == parsed_score.rating_class)
+                    & (Score.score == parsed_score.score)
+                )
+            )
+
+            if query_score and skip_duplicate:
+                logger.info(
+                    f"{repr(parsed_score)} skipped because "
+                    f"potential duplicate item {repr(query_score)} found."
+                )
+                continue
+            session.add(parsed_score)
