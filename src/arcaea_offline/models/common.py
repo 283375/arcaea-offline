@@ -14,5 +14,5 @@ class CommonBase(DeclarativeBase):
 class Property(CommonBase):
     __tablename__ = "property"
 
-    id: Mapped[str] = mapped_column(TEXT(), primary_key=True)
+    key: Mapped[str] = mapped_column(TEXT(), primary_key=True)
     value: Mapped[str] = mapped_column(TEXT())

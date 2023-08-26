@@ -104,6 +104,7 @@ class Calculated(ScoresViewBase):
             & (Chart.rating_class == Score.rating_class),
         ),
         metadata=ScoresViewBase.metadata,
+        cascade_on_drop=False,
     )
 
 
@@ -131,6 +132,7 @@ class Best(ScoresViewBase):
         .group_by(Calculated.song_id, Calculated.rating_class)
         .order_by(Calculated.potential.desc()),
         metadata=ScoresViewBase.metadata,
+        cascade_on_drop=False,
     )
 
 
@@ -147,4 +149,5 @@ class CalculatedPotential(ScoresViewBase):
         name="calculated_potential",
         selectable=select(func.avg(_select_bests_subquery.c.b30_sum).label("b30")),
         metadata=ScoresViewBase.metadata,
+        cascade_on_drop=False,
     )
