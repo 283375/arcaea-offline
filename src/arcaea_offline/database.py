@@ -1,4 +1,4 @@
-from sqlalchemy import Engine, select
+from sqlalchemy import Engine, inspect, select
 from sqlalchemy.orm import sessionmaker
 
 from .models.config import *
@@ -46,3 +46,17 @@ class Database(metaclass=Singleton):
             if not checkfirst or not result:
                 session.add(Property(key="version", value="2"))
                 session.commit()
+
+    def check_init(self) -> bool:
+        # check table exists
+        expect_tables = (
+            list(SongsBase.metadata.tables.keys())
+            + list(ScoresBase.metadata.tables.keys())
+            + list(ConfigBase.metadata.tables.keys())
+            + [
+                Calculated.__tablename__,
+                Best.__tablename__,
+                CalculatedPotential.__tablename__,
+            ]
+        )
+        return all(inspect(self.engine).has_table(t) for t in expect_tables)

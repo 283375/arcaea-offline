@@ -48,6 +48,8 @@ class ScoresViewBase(DeclarativeBase, ReprHelper):
 
 
 class Calculated(ScoresViewBase):
+    __tablename__ = "calculated"
+
     score_id: Mapped[str]
     song_id: Mapped[str]
     rating_class: Mapped[int]
@@ -62,7 +64,7 @@ class Calculated(ScoresViewBase):
     potential: Mapped[float]
 
     __table__ = create_view(
-        name="calculated",
+        name=__tablename__,
         selectable=select(
             Score.id.label("score_id"),
             Chart.song_id,
@@ -110,6 +112,8 @@ class Calculated(ScoresViewBase):
 
 
 class Best(ScoresViewBase):
+    __tablename__ = "best"
+
     score_id: Mapped[str]
     song_id: Mapped[str]
     rating_class: Mapped[int]
@@ -124,7 +128,7 @@ class Best(ScoresViewBase):
     potential: Mapped[float]
 
     __table__ = create_view(
-        name="best",
+        name=__tablename__,
         selectable=select(
             *[col for col in inspect(Calculated).columns if col.name != "potential"],
             func.max(Calculated.potential).label("potential"),
@@ -138,6 +142,8 @@ class Best(ScoresViewBase):
 
 
 class CalculatedPotential(ScoresViewBase):
+    __tablename__ = "calculated_potential"
+
     b30: Mapped[float]
 
     _select_bests_subquery = (
@@ -147,7 +153,7 @@ class CalculatedPotential(ScoresViewBase):
         .subquery()
     )
     __table__ = create_view(
-        name="calculated_potential",
+        name=__tablename__,
         selectable=select(func.avg(_select_bests_subquery.c.b30_sum).label("b30")),
         metadata=ScoresViewBase.metadata,
         cascade_on_drop=False,
