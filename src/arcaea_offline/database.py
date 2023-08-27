@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Optional, Union
 
 from sqlalchemy import Engine, inspect, select
 from sqlalchemy.orm import sessionmaker
@@ -84,3 +84,25 @@ class Database(metaclass=Singleton):
             ]
         )
         return all(inspect(self.engine).has_table(t) for t in expect_tables)
+
+    def version(self) -> Union[int, None]:
+        stmt = select(Property).where(Property.key == "version")
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return None if result is None else int(result.value)
+
+    def get_packs(self):
+        stmt = select(Pack)
+        with self.sessionmaker() as session:
+            results = list(session.scalars(stmt))
+        return results
+
+    def get_charts_in_pack(self, pack: str):
+        stmt = (
+            select(ChartInfo)
+            .join(Song, (Song.id == ChartInfo.song_id))
+            .where(Song.set == pack)
+        )
+        with self.sessionmaker() as session:
+            results = list(session.scalars(stmt))
+        return results
