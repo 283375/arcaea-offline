@@ -1,3 +1,6 @@
+import logging
+from typing import Optional
+
 from sqlalchemy import Engine, inspect, select
 from sqlalchemy.orm import sessionmaker
 
@@ -6,14 +9,35 @@ from .models.scores import *
 from .models.songs import *
 from .singleton import Singleton
 
+logger = logging.getLogger(__name__)
+
 
 class Database(metaclass=Singleton):
-    def __init__(self, engine: Engine):
-        self.engine = engine
+    def __init__(self, engine: Optional[Engine]):
+        try:
+            self.__engine
+        except AttributeError:
+            self.__engine = None
+
+        if engine is None:
+            if isinstance(self.engine, Engine):
+                return
+            raise ValueError("No sqlalchemy.Engine instance specified before.")
+        elif isinstance(engine, Engine):
+            if isinstance(self.engine, Engine):
+                logger.warning(
+                    f"A sqlalchemy.Engine instance {self.engine} has been specified "
+                    f"and will be replaced to {engine}"
+                )
+            self.engine = engine
+        else:
+            raise ValueError(
+                f"A sqlalchemy.Engine instance expected, not {repr(engine)}"
+            )
 
     @property
-    def engine(self):
-        return self.__engine
+    def engine(self) -> Engine:
+        return self.__engine  # type: ignore
 
     @engine.setter
     def engine(self, value: Engine):
