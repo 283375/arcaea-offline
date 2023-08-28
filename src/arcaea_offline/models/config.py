@@ -14,7 +14,7 @@ class ConfigBase(DeclarativeBase, ReprHelper):
 
 
 class Property(ConfigBase):
-    __tablename__ = "property"
+    __tablename__ = "properties"
 
     key: Mapped[str] = mapped_column(TEXT(), primary_key=True)
     value: Mapped[str] = mapped_column(TEXT())

@@ -5,14 +5,14 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy_utils import create_view
 
 from .common import ReprHelper
-from .songs import Chart, ChartInfo
+from .songs import ChartInfo, Difficulty
 
 __all__ = [
     "ScoresBase",
     "Score",
     "ScoresViewBase",
-    "Calculated",
-    "Best",
+    "ScoreCalculated",
+    "ScoreBest",
     "CalculatedPotential",
 ]
 
@@ -22,7 +22,7 @@ class ScoresBase(DeclarativeBase, ReprHelper):
 
 
 class Score(ScoresBase):
-    __tablename__ = "score"
+    __tablename__ = "scores"
 
     id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
     song_id: Mapped[str] = mapped_column(TEXT())
@@ -36,6 +36,7 @@ class Score(ScoresBase):
     r10_clear_type: Mapped[Optional[int]] = mapped_column(
         comment="0: LOST, 1: COMPLETE, 2: HARD_LOST"
     )
+    comment: Mapped[Optional[str]] = mapped_column(TEXT())
 
 
 # How to create an SQL View with SQLAlchemy?
@@ -47,35 +48,31 @@ class ScoresViewBase(DeclarativeBase, ReprHelper):
     pass
 
 
-class Calculated(ScoresViewBase):
-    __tablename__ = "calculated"
+class ScoreCalculated(ScoresViewBase):
+    __tablename__ = "scores_calculated"
 
-    score_id: Mapped[str]
+    id: Mapped[int]
     song_id: Mapped[str]
     rating_class: Mapped[int]
     score: Mapped[int]
     pure: Mapped[Optional[int]]
+    shiny_pure: Mapped[Optional[int]]
     far: Mapped[Optional[int]]
     lost: Mapped[Optional[int]]
     date: Mapped[Optional[int]]
     max_recall: Mapped[Optional[int]]
     r10_clear_type: Mapped[Optional[int]]
-    shiny_pure: Mapped[Optional[int]]
     potential: Mapped[float]
+    comment: Mapped[Optional[str]]
 
     __table__ = create_view(
         name=__tablename__,
         selectable=select(
-            Score.id.label("score_id"),
-            Chart.song_id,
-            Chart.rating_class,
+            Score.id,
+            Difficulty.song_id,
+            Difficulty.rating_class,
             Score.score,
             Score.pure,
-            Score.far,
-            Score.lost,
-            Score.date,
-            Score.max_recall,
-            Score.r10_clear_type,
             (
                 Score.score
                 - func.floor(
@@ -83,6 +80,11 @@ class Calculated(ScoresViewBase):
                     + (Score.far * 0.5 * 10000000.0 / ChartInfo.note)
                 )
             ).label("shiny_pure"),
+            Score.far,
+            Score.lost,
+            Score.date,
+            Score.max_recall,
+            Score.r10_clear_type,
             case(
                 (Score.score >= 10000000, ChartInfo.constant / 10.0 + 2),
                 (
@@ -94,48 +96,54 @@ class Calculated(ScoresViewBase):
                     0,
                 ),
             ).label("potential"),
+            Score.comment,
         )
-        .select_from(Chart)
+        .select_from(Difficulty)
         .join(
             ChartInfo,
-            (Chart.song_id == ChartInfo.song_id)
-            & (Chart.rating_class == ChartInfo.rating_class),
+            (Difficulty.song_id == ChartInfo.song_id)
+            & (Difficulty.rating_class == ChartInfo.rating_class),
         )
         .join(
             Score,
-            (Chart.song_id == Score.song_id)
-            & (Chart.rating_class == Score.rating_class),
+            (Difficulty.song_id == Score.song_id)
+            & (Difficulty.rating_class == Score.rating_class),
         ),
         metadata=ScoresViewBase.metadata,
         cascade_on_drop=False,
     )
 
 
-class Best(ScoresViewBase):
-    __tablename__ = "best"
+class ScoreBest(ScoresViewBase):
+    __tablename__ = "scores_best"
 
-    score_id: Mapped[str]
+    id: Mapped[int]
     song_id: Mapped[str]
     rating_class: Mapped[int]
     score: Mapped[int]
     pure: Mapped[Optional[int]]
+    shiny_pure: Mapped[Optional[int]]
     far: Mapped[Optional[int]]
     lost: Mapped[Optional[int]]
     date: Mapped[Optional[int]]
     max_recall: Mapped[Optional[int]]
     r10_clear_type: Mapped[Optional[int]]
-    shiny_pure: Mapped[Optional[int]]
     potential: Mapped[float]
+    comment: Mapped[Optional[str]]
 
     __table__ = create_view(
         name=__tablename__,
         selectable=select(
-            *[col for col in inspect(Calculated).columns if col.name != "potential"],
-            func.max(Calculated.potential).label("potential"),
+            *[
+                col
+                for col in inspect(ScoreCalculated).columns
+                if col.name != "potential"
+            ],
+            func.max(ScoreCalculated.potential).label("potential"),
         )
-        .select_from(Calculated)
-        .group_by(Calculated.song_id, Calculated.rating_class)
-        .order_by(Calculated.potential.desc()),
+        .select_from(ScoreCalculated)
+        .group_by(ScoreCalculated.song_id, ScoreCalculated.rating_class)
+        .order_by(ScoreCalculated.potential.desc()),
         metadata=ScoresViewBase.metadata,
         cascade_on_drop=False,
     )
@@ -147,8 +155,8 @@ class CalculatedPotential(ScoresViewBase):
     b30: Mapped[float]
 
     _select_bests_subquery = (
-        select(Best.potential.label("b30_sum"))
-        .order_by(Best.potential.desc())
+        select(ScoreBest.potential.label("b30_sum"))
+        .order_by(ScoreBest.potential.desc())
         .limit(30)
         .subquery()
     )

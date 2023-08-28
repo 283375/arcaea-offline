@@ -2,7 +2,7 @@ from decimal import Decimal
 from math import floor
 from typing import Dict, List
 
-from .models.scores import Calculated
+from .models.scores import ScoreCalculated
 
 
 def calculate_score_range(notes: int, pure: int, far: int):
@@ -30,8 +30,10 @@ def calculate_shiny_pure(notes: int, score: int, pure: int, far: int) -> int:
     return score - floor(actual_score)
 
 
-def get_b30_calculated_list(calculated_list: List[Calculated]) -> List[Calculated]:
-    best_scores: Dict[str, Calculated] = {}
+def get_b30_calculated_list(
+    calculated_list: List[ScoreCalculated],
+) -> List[ScoreCalculated]:
+    best_scores: Dict[str, ScoreCalculated] = {}
     for calculated in calculated_list:
         key = f"{calculated.song_id}_{calculated.rating_class}"
         stored = best_scores.get(key)
@@ -42,7 +44,7 @@ def get_b30_calculated_list(calculated_list: List[Calculated]) -> List[Calculate
     return ret_list
 
 
-def calculate_b30(calculated_list: List[Calculated]) -> Decimal:
+def calculate_b30(calculated_list: List[ScoreCalculated]) -> Decimal:
     ptt_list = [Decimal(c.potential) for c in get_b30_calculated_list(calculated_list)]
     sum_ptt_list = sum(ptt_list)
     return (sum_ptt_list / len(ptt_list)) if sum_ptt_list else Decimal("0.0")

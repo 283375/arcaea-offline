@@ -1,7 +1,7 @@
 import json
 from typing import List, Union
 
-from ...models.songs import Chart, ChartLocalized, Song, SongLocalized
+from ...models.songs import Difficulty, DifficultyLocalized, Song, SongLocalized
 from .common import ArcaeaParser, is_localized, set_model_localized_attrs, to_db_value
 
 
@@ -9,7 +9,9 @@ class SonglistParser(ArcaeaParser):
     def __init__(self, filepath):
         super().__init__(filepath)
 
-    def parse(self) -> List[Union[Song, SongLocalized, Chart, ChartLocalized]]:
+    def parse(
+        self,
+    ) -> List[Union[Song, SongLocalized, Difficulty, DifficultyLocalized]]:
         with open(self.filepath, "r", encoding="utf-8") as sl_f:
             songlist_json_root = json.loads(sl_f.read())
 
@@ -63,7 +65,7 @@ class SonglistDifficultiesParser(ArcaeaParser):
     def __init__(self, filepath):
         self.filepath = filepath
 
-    def parse(self) -> List[Union[Chart, ChartLocalized]]:
+    def parse(self) -> List[Union[Difficulty, DifficultyLocalized]]:
         with open(self.filepath, "r", encoding="utf-8") as sl_f:
             songlist_json_root = json.loads(sl_f.read())
 
@@ -74,7 +76,7 @@ class SonglistDifficultiesParser(ArcaeaParser):
                 continue
 
             for item in song_item["difficulties"]:
-                chart = Chart(song_id=song_item["id"])
+                chart = Difficulty(song_id=song_item["id"])
                 chart.rating_class = item["ratingClass"]
                 chart.rating = item["rating"]
                 chart.rating_plus = item.get("ratingPlus") or False
@@ -94,7 +96,7 @@ class SonglistDifficultiesParser(ArcaeaParser):
                 results.append(chart)
 
                 if is_localized(item, "title") or is_localized(item, "artist"):
-                    chart_localized = ChartLocalized(
+                    chart_localized = DifficultyLocalized(
                         song_id=chart.song_id, rating_class=chart.rating_class
                     )
                     set_model_localized_attrs(chart_localized, item, "title")

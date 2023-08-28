@@ -56,9 +56,11 @@ class Database(metaclass=Singleton):
             # > https://github.com/kvesteri/sqlalchemy-utils/issues/396
             # > view.create_view() causes DuplicateTableError on Base.metadata.create_all(checkfirst=True)
             # so if `checkfirst` is True, drop these views before creating
+            SongsViewBase.metadata.drop_all(self.engine)
             ScoresViewBase.metadata.drop_all(self.engine)
 
         SongsBase.metadata.create_all(self.engine, checkfirst=checkfirst)
+        SongsViewBase.metadata.create_all(self.engine)
         ScoresBase.metadata.create_all(self.engine, checkfirst=checkfirst)
         ScoresViewBase.metadata.create_all(self.engine)
         ConfigBase.metadata.create_all(self.engine, checkfirst=checkfirst)
@@ -68,7 +70,7 @@ class Database(metaclass=Singleton):
             stmt = select(Property.value).where(Property.key == "version")
             result = session.execute(stmt).fetchone()
             if not checkfirst or not result:
-                session.add(Property(key="version", value="2"))
+                session.add(Property(key="version", value="3"))
                 session.commit()
 
     def check_init(self) -> bool:
@@ -78,8 +80,8 @@ class Database(metaclass=Singleton):
             + list(ScoresBase.metadata.tables.keys())
             + list(ConfigBase.metadata.tables.keys())
             + [
-                Calculated.__tablename__,
-                Best.__tablename__,
+                ScoreCalculated.__tablename__,
+                ScoreBest.__tablename__,
                 CalculatedPotential.__tablename__,
             ]
         )
@@ -96,6 +98,12 @@ class Database(metaclass=Singleton):
         with self.sessionmaker() as session:
             results = list(session.scalars(stmt))
         return results
+
+    def get_pack_by_id(self, value: str):
+        stmt = select(Pack).where(Pack.id == value)
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
 
     def get_charts_in_pack(self, pack: str):
         stmt = (
