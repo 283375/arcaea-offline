@@ -76,6 +76,9 @@ class SonglistDifficultiesParser(ArcaeaParser):
                 continue
 
             for item in song_item["difficulties"]:
+                if item["rating"] == 0:
+                    continue
+
                 chart = Difficulty(song_id=song_item["id"])
                 chart.rating_class = item["ratingClass"]
                 chart.rating = item["rating"]
