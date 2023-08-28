@@ -103,8 +103,8 @@ class Database(metaclass=Singleton):
     def get_packs(self):
         stmt = select(Pack)
         with self.sessionmaker() as session:
-            results = session.scalars(stmt)
-        return list(results)
+            results = list(session.scalars(stmt))
+        return results
 
     def get_pack_by_id(self, pack_id: str):
         stmt = select(Pack).where(Pack.id == pack_id)
@@ -119,14 +119,14 @@ class Database(metaclass=Singleton):
     def get_charts_by_pack_id(self, pack_id: str):
         stmt = select(Chart).where(Chart.set == pack_id)
         with self.sessionmaker() as session:
-            results = session.scalars(stmt)
-        return list(results)
+            results = list(session.scalars(stmt))
+        return results
 
     def get_charts_by_song_id(self, song_id: str):
         stmt = select(Chart).where(Chart.song_id == song_id)
         with self.sessionmaker() as session:
-            results = session.scalars(stmt)
-        return list(results)
+            results = list(session.scalars(stmt))
+        return results
 
     def get_chart(self, song_id: str, rating_class: int):
         stmt = select(Chart).where(
