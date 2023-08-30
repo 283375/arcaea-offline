@@ -14,7 +14,9 @@ class PacklistParser(ArcaeaParser):
             packlist_json_root = json.loads(pl_f.read())
 
         packlist_json = packlist_json_root["packs"]
-        results = []
+        results: List[Union[Pack, PackLocalized]] = [
+            Pack(id="single", name="Memory Archive")
+        ]
         for item in packlist_json:
             pack = Pack()
             pack.id = item["id"]
