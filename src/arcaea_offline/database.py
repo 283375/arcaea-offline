@@ -4,6 +4,7 @@ from typing import Optional, Union
 from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import sessionmaker
 
+from .external.arcsong.arcsong_json import ArcSongJsonBuilder
 from .models.config import *
 from .models.scores import *
 from .models.songs import *
@@ -165,3 +166,8 @@ class Database(metaclass=Singleton):
         with self.sessionmaker() as session:
             result = session.scalar(stmt)
         return result
+
+    def generate_arcsong(self):
+        with self.sessionmaker() as session:
+            arcsong = ArcSongJsonBuilder(session).generate_arcsong_json()
+        return arcsong
