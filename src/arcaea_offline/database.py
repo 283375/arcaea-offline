@@ -1,10 +1,11 @@
 import logging
-from typing import Optional, Type, Union
+from typing import List, Optional, Type, Union
 
 from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, sessionmaker
 
 from .external.arcsong.arcsong_json import ArcSongJsonBuilder
+from .external.exports import ScoreExport, exporters
 from .models.config import *
 from .models.scores import *
 from .models.songs import *
@@ -211,7 +212,15 @@ class Database(metaclass=Singleton):
 
     # endregion
 
+    # region export
+
+    def export_scores(self) -> List[ScoreExport]:
+        scores = self.get_scores()
+        return [exporters.score(score) for score in scores]
+
     def generate_arcsong(self):
         with self.sessionmaker() as session:
             arcsong = ArcSongJsonBuilder(session).generate_arcsong_json()
         return arcsong
+
+    # endregion
