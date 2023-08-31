@@ -156,7 +156,7 @@ class ChartInfo(SongsBase):
     constant: Mapped[int] = mapped_column(
         comment="real_constant * 10. For example, Crimson Throne [FTR] is 10.4, then store 104 here."
     )
-    note: Mapped[Optional[int]]
+    notes: Mapped[Optional[int]]
 
 
 class SongsViewBase(DeclarativeBase, ReprHelper):
@@ -193,7 +193,7 @@ class Chart(SongsViewBase):
     jacket_override: Mapped[bool]
     jacket_night: Mapped[Optional[str]]
     constant: Mapped[int]
-    note: Mapped[Optional[int]]
+    notes: Mapped[Optional[int]]
 
     __table__ = create_view(
         name=__tablename__,
@@ -225,7 +225,7 @@ class Chart(SongsViewBase):
             Difficulty.jacket_override,
             Difficulty.jacket_night,
             ChartInfo.constant,
-            ChartInfo.note,
+            ChartInfo.notes,
         )
         .select_from(Difficulty)
         .join(

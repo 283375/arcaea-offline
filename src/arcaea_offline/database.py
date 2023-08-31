@@ -73,7 +73,7 @@ class Database(metaclass=Singleton):
             stmt = select(Property.value).where(Property.key == "version")
             result = session.execute(stmt).fetchone()
             if not checkfirst or not result:
-                session.add(Property(key="version", value="3"))
+                session.add(Property(key="version", value="4"))
                 session.commit()
 
     def check_init(self) -> bool:
@@ -191,7 +191,7 @@ class Database(metaclass=Singleton):
         stmt = (
             select(func.count())
             .select_from(ChartInfo)
-            .where((ChartInfo.constant != None) & (ChartInfo.note != None))
+            .where((ChartInfo.constant != None) & (ChartInfo.notes != None))
         )
         with self.sessionmaker() as session:
             result = session.scalar(stmt)

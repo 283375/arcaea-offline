@@ -108,7 +108,7 @@ class ArcSongJsonBuilder:
             "version": difficulty.version or song.version or "",
             "difficulty": difficulty.rating * 2 + int(difficulty.rating_plus),
             "rating": chart_info.constant or 0 if chart_info else 0,
-            "note": chart_info.note or 0 if chart_info else 0,
+            "note": chart_info.notes or 0 if chart_info else 0,
             "chart_designer": difficulty.chart_designer or "",
             "jacket_designer": difficulty.jacket_desginer or "",
             "jacket_override": difficulty.jacket_override,

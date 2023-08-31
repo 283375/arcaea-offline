@@ -22,7 +22,7 @@ class ArcsongDbParser:
                     song_id=result[0],
                     rating_class=result[1],
                     constant=result[2],
-                    note=result[3] or None,
+                    notes=result[3] or None,
                 )
                 results.append(chart)
 

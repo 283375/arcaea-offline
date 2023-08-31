@@ -33,8 +33,11 @@ class Score(ScoresBase):
     lost: Mapped[Optional[int]]
     date: Mapped[Optional[int]]
     max_recall: Mapped[Optional[int]]
-    r10_clear_type: Mapped[Optional[int]] = mapped_column(
-        comment="0: LOST, 1: COMPLETE, 2: HARD_LOST"
+    modifier: Mapped[Optional[int]] = mapped_column(
+        comment="0: NORMAL, 1: EASY, 2: HARD"
+    )
+    clear_type: Mapped[Optional[int]] = mapped_column(
+        comment="0: TRACK LOST, 1: NORMAL CLEAR, 2: FULL RECALL, 3: PURE MEMORY, 4: EASY CLEAR, 5: HARD CLEAR"
     )
     comment: Mapped[Optional[str]] = mapped_column(TEXT())
 
@@ -61,7 +64,8 @@ class ScoreCalculated(ScoresViewBase):
     lost: Mapped[Optional[int]]
     date: Mapped[Optional[int]]
     max_recall: Mapped[Optional[int]]
-    r10_clear_type: Mapped[Optional[int]]
+    modifier: Mapped[Optional[int]]
+    clear_type: Mapped[Optional[int]]
     potential: Mapped[float]
     comment: Mapped[Optional[str]]
 
@@ -76,15 +80,16 @@ class ScoreCalculated(ScoresViewBase):
             (
                 Score.score
                 - func.floor(
-                    (Score.pure * 10000000.0 / ChartInfo.note)
-                    + (Score.far * 0.5 * 10000000.0 / ChartInfo.note)
+                    (Score.pure * 10000000.0 / ChartInfo.notes)
+                    + (Score.far * 0.5 * 10000000.0 / ChartInfo.notes)
                 )
             ).label("shiny_pure"),
             Score.far,
             Score.lost,
             Score.date,
             Score.max_recall,
-            Score.r10_clear_type,
+            Score.modifier,
+            Score.clear_type,
             case(
                 (Score.score >= 10000000, ChartInfo.constant / 10.0 + 2),
                 (
@@ -127,7 +132,8 @@ class ScoreBest(ScoresViewBase):
     lost: Mapped[Optional[int]]
     date: Mapped[Optional[int]]
     max_recall: Mapped[Optional[int]]
-    r10_clear_type: Mapped[Optional[int]]
+    modifier: Mapped[Optional[int]]
+    clear_type: Mapped[Optional[int]]
     potential: Mapped[float]
     comment: Mapped[Optional[str]]
 
