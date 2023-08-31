@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Union
 
-from sqlalchemy import Engine, inspect, select
+from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import sessionmaker
 
 from .models.config import *
@@ -135,6 +135,28 @@ class Database(metaclass=Singleton):
         with self.sessionmaker() as session:
             result = session.scalar(stmt)
         return result
+
+    # endregion
+
+    # region Score
+
+    def get_scores(self):
+        stmt = select(Score)
+        with self.sessionmaker() as session:
+            results = list(session.scalars(stmt))
+        return results
+
+    def get_score_by_id(self, score_id: int):
+        stmt = select(Score).where(Score.id == score_id)
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
+
+    def count_scores(self):
+        stmt = select(func.count(Score.id))
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result or 0
 
     # endregion
 
