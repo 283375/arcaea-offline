@@ -74,10 +74,10 @@ class AndrealImageGeneratorApiDataConverter:
             }
         }
 
-    def user_best30(self, limit: int = 40):
+    def user_best30(self):
         scores = list(
             self.session.scalars(
-                select(ScoreBest).order_by(ScoreBest.potential.desc()).limit(limit)
+                select(ScoreBest).order_by(ScoreBest.potential.desc()).limit(40)
             )
         )
         if not scores:
@@ -88,6 +88,7 @@ class AndrealImageGeneratorApiDataConverter:
             "content": {
                 "account_info": self.account_info(),
                 "best30_avg": best30_avg,
-                "best30_list": [self.score(score) for score in scores],
+                "best30_list": [self.score(score) for score in scores[:30]],
+                "best30_overflow": [self.score(score) for score in scores[-10:]],
             }
         }
