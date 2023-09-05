@@ -108,13 +108,13 @@ class Database(metaclass=Singleton):
             results = list(session.scalars(stmt))
         return results
 
-    def get_pack_by_id(self, pack_id: str):
+    def get_pack(self, pack_id: str):
         stmt = select(Pack).where(Pack.id == pack_id)
         with self.sessionmaker() as session:
             result = session.scalar(stmt)
         return result
 
-    def get_pack_localized_by_id(self, pack_id: str):
+    def get_pack_localized(self, pack_id: str):
         stmt = select(PackLocalized).where(PackLocalized.id == pack_id)
         with self.sessionmaker() as session:
             result = session.scalar(stmt)
@@ -130,13 +130,13 @@ class Database(metaclass=Singleton):
             results = list(session.scalars(stmt))
         return results
 
-    def get_song_by_id(self, song_id: str):
+    def get_song(self, song_id: str):
         stmt = select(Song).where(Song.id == song_id)
         with self.sessionmaker() as session:
             result = session.scalar(stmt)
         return result
 
-    def get_song_localized_by_id(self, song_id: str):
+    def get_song_localized(self, song_id: str):
         stmt = select(SongLocalized).where(SongLocalized.id == song_id)
         with self.sessionmaker() as session:
             result = session.scalar(stmt)
@@ -239,7 +239,7 @@ class Database(metaclass=Singleton):
             results = list(session.scalars(stmt))
         return results
 
-    def get_score_by_id(self, score_id: int):
+    def get_score(self, score_id: int):
         stmt = select(Score).where(Score.id == score_id)
         with self.sessionmaker() as session:
             result = session.scalar(stmt)
