@@ -114,6 +114,97 @@ class Database(metaclass=Singleton):
             result = session.scalar(stmt)
         return result
 
+    def get_pack_localized_by_id(self, pack_id: str):
+        stmt = select(PackLocalized).where(PackLocalized.id == pack_id)
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
+
+    # endregion
+
+    # region Song
+
+    def get_songs(self):
+        stmt = select(Song)
+        with self.sessionmaker() as session:
+            results = list(session.scalars(stmt))
+        return results
+
+    def get_song_by_id(self, song_id: str):
+        stmt = select(Song).where(Song.id == song_id)
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
+
+    def get_song_localized_by_id(self, song_id: str):
+        stmt = select(SongLocalized).where(SongLocalized.id == song_id)
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
+
+    # endregion
+
+    # region Difficulty
+
+    def get_difficulties(self):
+        stmt = select(Difficulty)
+        with self.sessionmaker() as session:
+            results = list(session.scalars(stmt))
+        return results
+
+    def get_difficulties_by_song_id(self, song_id: str):
+        stmt = select(Difficulty).where(Difficulty.song_id == song_id)
+        with self.sessionmaker() as session:
+            results = session.scalars(stmt)
+        return results
+
+    def get_difficulties_localized_by_song_id(self, song_id: str):
+        stmt = select(DifficultyLocalized).where(DifficultyLocalized.song_id == song_id)
+        with self.sessionmaker() as session:
+            results = session.scalars(stmt)
+        return results
+
+    def get_difficulty(self, song_id: str, rating_class: int):
+        stmt = select(Difficulty).where(
+            (Difficulty.song_id == song_id) & (Difficulty.rating_class == rating_class)
+        )
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
+
+    def get_difficulty_localized(self, song_id: str, rating_class: int):
+        stmt = select(DifficultyLocalized).where(
+            (DifficultyLocalized.song_id == song_id)
+            & (DifficultyLocalized.rating_class == rating_class)
+        )
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
+
+    # endregion
+
+    # region ChartInfo
+
+    def get_chart_infos(self):
+        stmt = select(ChartInfo)
+        with self.sessionmaker() as session:
+            results = list(session.scalars(stmt))
+        return results
+
+    def get_chart_infos_by_song_id(self, song_id: str):
+        stmt = select(ChartInfo).where(ChartInfo.song_id == song_id)
+        with self.sessionmaker() as session:
+            results = session.scalars(stmt)
+        return results
+
+    def get_chart_info(self, song_id: str, rating_class: int):
+        stmt = select(ChartInfo).where(
+            (ChartInfo.song_id == song_id) & (ChartInfo.rating_class == rating_class)
+        )
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
+
     # endregion
 
     # region Chart
