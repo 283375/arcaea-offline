@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional, Type, Union
+from typing import Iterable, List, Optional, Type, Union
 
 from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, sessionmaker
@@ -244,6 +244,30 @@ class Database(metaclass=Singleton):
         with self.sessionmaker() as session:
             result = session.scalar(stmt)
         return result
+
+    def insert_score(self, score: Score):
+        with self.sessionmaker() as session:
+            session.add(score)
+            session.commit()
+
+    def insert_scores(self, scores: Iterable[Score]):
+        with self.sessionmaker() as session:
+            session.add_all(scores)
+            session.commit()
+
+    def update_score(self, score: Score):
+        if score.id is None:
+            raise ValueError(
+                "Cannot determine which score to update, please specify `score.id`"
+            )
+        with self.sessionmaker() as session:
+            session.merge(score)
+            session.commit()
+
+    def delete_score(self, score: Score):
+        with self.sessionmaker() as session:
+            session.delete(score)
+            session.commit()
 
     # endregion
 
