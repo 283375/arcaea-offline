@@ -3,7 +3,7 @@ class AndrealImageGeneratorAccount:
         self,
         name: str = "Player",
         code: int = 123456789,
-        rating: int = 750,
+        rating: int = -1,
         character: int = 5,
         character_uncapped: bool = False,
     ):

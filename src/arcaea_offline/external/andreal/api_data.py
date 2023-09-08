@@ -35,7 +35,7 @@ class AndrealImageGeneratorApiDataConverter:
             "difficulty": score.rating_class,
             "clear_type": score.clear_type or 1,
             "best_clear_type": score.clear_type or 1,
-            "time_played": score.date or 0,
+            "time_played": score.date * 1000 if score.date else 0,
             "near_count": score.far,
             "miss_count": score.lost,
             "perfect_count": score.pure,
