@@ -1,3 +1,4 @@
+import contextlib
 import json
 from os import PathLike
 from typing import Any, List, Optional, Union
@@ -42,6 +43,25 @@ def set_model_localized_attrs(
 class ArcaeaParser:
     def __init__(self, filepath: Union[str, bytes, PathLike]):
         self.filepath = filepath
+
+    def read_file_text(self):
+        file_handle = None
+
+        with contextlib.suppress(TypeError):
+            # original open
+            file_handle = open(self.filepath, "r", encoding="utf-8")
+
+        if file_handle is None:
+            try:
+                # or maybe a `pathlib.Path` subset
+                # or an `importlib.resources.abc.Traversable` like object
+                # e.g. `zipfile.Path`
+                file_handle = self.filepath.open(mode="r", encoding="utf-8")
+            except Exception as e:
+                raise ValueError("Invalid `filepath`.") from e
+
+        with file_handle:
+            return file_handle.read()
 
     def parse(self) -> List[DeclarativeBase]:
         ...

@@ -10,8 +10,7 @@ class PacklistParser(ArcaeaParser):
         super().__init__(filepath)
 
     def parse(self) -> List[Union[Pack, PackLocalized]]:
-        with open(self.filepath, "r", encoding="utf-8") as pl_f:
-            packlist_json_root = json.loads(pl_f.read())
+        packlist_json_root = json.loads(self.read_file_text())
 
         packlist_json = packlist_json_root["packs"]
         results: List[Union[Pack, PackLocalized]] = [
