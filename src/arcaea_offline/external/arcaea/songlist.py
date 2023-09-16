@@ -65,8 +65,7 @@ class SonglistDifficultiesParser(ArcaeaParser):
         self.filepath = filepath
 
     def parse(self) -> List[Union[Difficulty, DifficultyLocalized]]:
-        with open(self.filepath, "r", encoding="utf-8") as sl_f:
-            songlist_json_root = json.loads(sl_f.read())
+        songlist_json_root = json.loads(self.read_file_text())
 
         songlist_json = songlist_json_root["songs"]
         results = []
