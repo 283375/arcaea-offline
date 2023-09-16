@@ -155,13 +155,13 @@ class Database(metaclass=Singleton):
     def get_difficulties_by_song_id(self, song_id: str):
         stmt = select(Difficulty).where(Difficulty.song_id == song_id)
         with self.sessionmaker() as session:
-            results = session.scalars(stmt)
+            results = list(session.scalars(stmt))
         return results
 
     def get_difficulties_localized_by_song_id(self, song_id: str):
         stmt = select(DifficultyLocalized).where(DifficultyLocalized.song_id == song_id)
         with self.sessionmaker() as session:
-            results = session.scalars(stmt)
+            results = list(session.scalars(stmt))
         return results
 
     def get_difficulty(self, song_id: str, rating_class: int):
@@ -194,7 +194,7 @@ class Database(metaclass=Singleton):
     def get_chart_infos_by_song_id(self, song_id: str):
         stmt = select(ChartInfo).where(ChartInfo.song_id == song_id)
         with self.sessionmaker() as session:
-            results = session.scalars(stmt)
+            results = list(session.scalars(stmt))
         return results
 
     def get_chart_info(self, song_id: str, rating_class: int):
