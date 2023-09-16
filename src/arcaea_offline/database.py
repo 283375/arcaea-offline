@@ -130,6 +130,12 @@ class Database(metaclass=Singleton):
             results = list(session.scalars(stmt))
         return results
 
+    def get_songs_by_pack_id(self, pack_id: str):
+        stmt = select(Song).where(Song.set == pack_id)
+        with self.sessionmaker() as session:
+            results = list(session.scalars(stmt))
+        return results
+
     def get_song(self, song_id: str):
         stmt = select(Song).where(Song.id == song_id)
         with self.sessionmaker() as session:
