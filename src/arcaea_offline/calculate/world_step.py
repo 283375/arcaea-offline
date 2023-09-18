@@ -148,3 +148,28 @@ def calculate_step(
     )
 
     return round(play_result_original, 1)
+
+
+def calculate_potential_from_step(
+    step: Union[Decimal, str, int, float],
+    partner_step_value: Union[Decimal, str, int, float],
+    *,
+    partner_bonus: Optional[PartnerBonus] = None,
+    booster: Optional[StepBooster] = None,
+):
+    step = Decimal(step)
+    partner_step_value = Decimal(partner_step_value)
+
+    # get original play result
+    if partner_bonus and partner_bonus.final_multiplier:
+        step /= partner_bonus.final_multiplier
+    if booster:
+        step /= booster.final_value()
+
+    if partner_bonus and partner_bonus.step_bonus:
+        step -= partner_bonus.step_bonus
+
+    potential_sqrt = (Decimal(50) * step - Decimal("2.5") * partner_step_value) / (
+        Decimal("2.45") * partner_step_value
+    )
+    return potential_sqrt**2
