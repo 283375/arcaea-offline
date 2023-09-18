@@ -22,8 +22,10 @@ def calculate_score_modifier(score: int) -> Decimal:
         return Decimal(score - 9500000) / 300000
 
 
-def calculate_potential(_constant: float, score: int) -> Decimal:
-    constant = Decimal(_constant)
+def calculate_play_rating(
+    constant: Union[Decimal, str, float, int], score: int
+) -> Decimal:
+    constant = Decimal(constant)
     score_modifier = calculate_score_modifier(score)
     return max(Decimal(0), constant + score_modifier)
 
@@ -35,7 +37,7 @@ def calculate_shiny_pure(notes: int, score: int, pure: int, far: int) -> int:
 
 
 @dataclass
-class ConstantsFromPotentialResult:
+class ConstantsFromPlayRatingResult:
     EXPlus: Tuple[Decimal, Decimal]
     EX: Tuple[Decimal, Decimal]
     AA: Tuple[Decimal, Decimal]
@@ -44,8 +46,8 @@ class ConstantsFromPotentialResult:
     C: Tuple[Decimal, Decimal]
 
 
-def calculate_constants_from_potential(potential: Union[Decimal, str, float, int]):
-    potential = Decimal(potential)
+def calculate_constants_from_play_rating(play_rating: Union[Decimal, str, float, int]):
+    play_rating = Decimal(play_rating)
 
     ranges = []
     for upperScore, lowerScore in [
@@ -58,6 +60,8 @@ def calculate_constants_from_potential(potential: Union[Decimal, str, float, int
     ]:
         upperScoreModifier = calculate_score_modifier(upperScore)
         lowerScoreModifier = calculate_score_modifier(lowerScore)
-        ranges.append((potential - upperScoreModifier, potential - lowerScoreModifier))
+        ranges.append(
+            (play_rating - upperScoreModifier, play_rating - lowerScoreModifier)
+        )
 
-    return ConstantsFromPotentialResult(*ranges)
+    return ConstantsFromPlayRatingResult(*ranges)

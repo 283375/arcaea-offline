@@ -6,15 +6,15 @@ class PlayResults:
     def __init__(
         self,
         *,
-        potential: Union[Decimal, str, float, int],
+        play_rating: Union[Decimal, str, float, int],
         partner_step: Union[Decimal, str, float, int],
     ):
-        self.__potential = potential
+        self.__play_rating = play_rating
         self.__partner_step = partner_step
 
     @property
-    def potential(self):
-        return Decimal(self.__potential)
+    def play_rating(self):
+        return Decimal(self.__play_rating)
 
     @property
     def partner_step(self):
@@ -119,7 +119,7 @@ def calculate_step_original(
     partner_bonus: Optional[PartnerBonus] = None,
     booster: Optional[StepBooster] = None,
 ):
-    ptt = play_results.potential
+    ptt = play_results.play_rating
     step = play_results.partner_step
     if partner_bonus:
         partner_bonus_step = partner_bonus.step_bonus
@@ -150,7 +150,7 @@ def calculate_step(
     return round(play_result_original, 1)
 
 
-def calculate_potential_from_step(
+def calculate_play_rating_from_step(
     step: Union[Decimal, str, int, float],
     partner_step_value: Union[Decimal, str, int, float],
     *,
@@ -169,7 +169,7 @@ def calculate_potential_from_step(
     if partner_bonus and partner_bonus.step_bonus:
         step -= partner_bonus.step_bonus
 
-    potential_sqrt = (Decimal(50) * step - Decimal("2.5") * partner_step_value) / (
+    play_rating_sqrt = (Decimal(50) * step - Decimal("2.5") * partner_step_value) / (
         Decimal("2.45") * partner_step_value
     )
-    return potential_sqrt**2
+    return play_rating_sqrt**2
