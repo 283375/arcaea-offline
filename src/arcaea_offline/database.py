@@ -1,9 +1,11 @@
 import logging
+import math
 from typing import Iterable, List, Optional, Type, Union
 
 from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, sessionmaker
 
+from .calculate import calculate_score_modifier
 from .external.arcsong.arcsong_json import ArcSongJsonBuilder
 from .external.exports import ScoreExport, exporters
 from .models.config import *
@@ -227,6 +229,12 @@ class Database(metaclass=Singleton):
             results = list(session.scalars(stmt))
         return results
 
+    def get_charts_by_constant(self, constant: int):
+        stmt = select(Chart).where(Chart.constant == constant)
+        with self.sessionmaker() as session:
+            results = list(session.scalars(stmt))
+        return results
+
     def get_chart(self, song_id: str, rating_class: int):
         stmt = select(Chart).where(
             (Chart.song_id == song_id) & (Chart.rating_class == rating_class)
@@ -274,6 +282,38 @@ class Database(metaclass=Singleton):
         with self.sessionmaker() as session:
             session.delete(score)
             session.commit()
+
+    def recommend_charts(self, play_result: float):
+        base_constant = math.ceil(play_result * 10)
+
+        results = []
+        results_id = []
+        with self.sessionmaker() as session:
+            for constant in range(base_constant - 20, base_constant + 1):
+                # from Pure Memory(EX+) to AA
+                score_modifier = (play_result * 10 - constant) / 10
+                if score_modifier >= 2.0:
+                    min_score = 10000000
+                elif score_modifier >= 1.0:
+                    min_score = 200000 * (score_modifier - 1) + 9800000
+                else:
+                    min_score = 300000 * score_modifier + 9500000
+                min_score = int(min_score)
+
+                charts = self.get_charts_by_constant(constant)
+                for chart in charts:
+                    score_best_stmt = select(ScoreBest).where(
+                        (ScoreBest.song_id == chart.song_id)
+                        & (ScoreBest.rating_class == chart.rating_class)
+                        & (ScoreBest.score >= min_score)
+                    )
+                    if session.scalar(score_best_stmt):
+                        chart_id = f"{chart.song_id},{chart.rating_class}"
+                        if chart_id not in results_id:
+                            results.append(chart)
+                            results_id.append(chart_id)
+
+        return results
 
     # endregion
 
