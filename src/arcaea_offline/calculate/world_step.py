@@ -25,7 +25,7 @@ class PartnerBonus:
     def __init__(
         self,
         *,
-        step_bonus: Union[Decimal, str, float, int] = Decimal("1.0"),
+        step_bonus: Union[Decimal, str, float, int] = Decimal("0.0"),
         final_multiplier: Union[Decimal, str, float, int] = Decimal("1.0"),
     ):
         self.__step_bonus = step_bonus
