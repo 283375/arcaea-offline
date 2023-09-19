@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import Literal, Optional, Union
 
 
-class PlayResults:
+class PlayResult:
     def __init__(
         self,
         *,
@@ -114,13 +114,13 @@ class MemoriesStepBooster(StepBooster):
 
 
 def calculate_step_original(
-    play_results: PlayResults,
+    play_result: PlayResult,
     *,
     partner_bonus: Optional[PartnerBonus] = None,
-    booster: Optional[StepBooster] = None,
+    step_booster: Optional[StepBooster] = None,
 ):
-    ptt = play_results.play_rating
-    step = play_results.partner_step
+    ptt = play_result.play_rating
+    step = play_result.partner_step
     if partner_bonus:
         partner_bonus_step = partner_bonus.step_bonus
         partner_bonus_multiplier = partner_bonus.final_multiplier
@@ -131,20 +131,20 @@ def calculate_step_original(
     play_result = (Decimal("2.45") * ptt.sqrt() + Decimal("2.5")) * (step / 50)
     play_result += partner_bonus_step
     play_result *= partner_bonus_multiplier
-    if booster:
-        play_result *= booster.final_value()
+    if step_booster:
+        play_result *= step_booster.final_value()
 
     return play_result
 
 
 def calculate_step(
-    play_results: PlayResults,
+    play_result: PlayResult,
     *,
     partner_bonus: Optional[PartnerBonus] = None,
-    booster: Optional[StepBooster] = None,
+    step_booster: Optional[StepBooster] = None,
 ):
     play_result_original = calculate_step_original(
-        play_results, partner_bonus=partner_bonus, booster=booster
+        play_result, partner_bonus=partner_bonus, step_booster=step_booster
     )
 
     return round(play_result_original, 1)
@@ -155,7 +155,7 @@ def calculate_play_rating_from_step(
     partner_step_value: Union[Decimal, str, int, float],
     *,
     partner_bonus: Optional[PartnerBonus] = None,
-    booster: Optional[StepBooster] = None,
+    step_booster: Optional[StepBooster] = None,
 ):
     step = Decimal(step)
     partner_step_value = Decimal(partner_step_value)
@@ -163,8 +163,8 @@ def calculate_play_rating_from_step(
     # get original play result
     if partner_bonus and partner_bonus.final_multiplier:
         step /= partner_bonus.final_multiplier
-    if booster:
-        step /= booster.final_value()
+    if step_booster:
+        step /= step_booster.final_value()
 
     if partner_bonus and partner_bonus.step_bonus:
         step -= partner_bonus.step_bonus
