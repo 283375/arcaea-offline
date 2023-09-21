@@ -172,4 +172,4 @@ def calculate_play_rating_from_step(
     play_rating_sqrt = (Decimal(50) * step - Decimal("2.5") * partner_step_value) / (
         Decimal("2.45") * partner_step_value
     )
-    return play_rating_sqrt**2
+    return play_rating_sqrt**2 if play_rating_sqrt >= 0 else -(play_rating_sqrt**2)
