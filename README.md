@@ -1,22 +1,39 @@
 # Arcaea Offline
 
-> 接受 <i><b>lr</b><sub>lowiro</sub></i> 的一切
+English | [简体中文](./README.zh_Hans.md)
 
-![Excel | Eternity](./assets/excel_eternity.png "Excel | Eternity")
+<span>
+  <img src="./assets/banner.png" style="height: 175px; object-fit: contain;">
+</span>
+
+> Accept <i><b>lr</b><sub>lowiro</sub></i>
 
 ## WIP
 
-This project is under active development, thus it is unstable and API may change frequently.
+> **Warning**
+> This project is under active development, thus it is unstable and API may change frequently.
 
-## 这事什么？
+## What is this？
 
-这是用于计算 [Arcaea](https://arcaea.lowiro.com/) 中，玩家潜力值的 [B30 和 R10](https://wiki.arcaea.cn/潜力值#整体潜力值计算) 部分的程序。
+This is the core library of `Arcaea Offline`, designed to manage player scores, calculate their potential, and provide various useful tools.
 
-## 这怎么用？
+## How to use this？
 
-这个存储库是相对基础的，提供操作数据库等“底层”操作的 python 库。要使用该库，请查阅 API 手册（还没写）。
+This repository is a python library.
 
-如果您正寻找 GUI，请前往 [283375/arcaea-offline-pyside-ui](https://github.com/283375/arcaea-offline-pyside-ui) 了解详情。
+For general users, if you don't know what is a "library", you may be interested about [this GUI](https://github.com/283375/arcaea-offline-pyside-ui).
+
+For developers, the documentation is under construction. Check back later!
+
+## License
+
+This file is part of arcaea-offline.
+
+arcaea-offline is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+arcaea-offline is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with arcaea-offline. If not, see <https://www.gnu.org/licenses/>.
 
 ## Credits
 
