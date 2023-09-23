@@ -22,12 +22,9 @@ def calculate_score_modifier(score: int) -> Decimal:
         return Decimal(score - 9500000) / 300000
 
 
-def calculate_play_rating(
-    constant: Union[Decimal, str, float, int], score: int
-) -> Decimal:
-    constant = Decimal(constant)
+def calculate_play_rating(constant: int, score: int) -> Decimal:
     score_modifier = calculate_score_modifier(score)
-    return max(Decimal(0), constant + score_modifier)
+    return max(Decimal(0), Decimal(constant) / 10 + score_modifier)
 
 
 def calculate_shiny_pure(notes: int, score: int, pure: int, far: int) -> int:
