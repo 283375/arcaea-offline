@@ -259,6 +259,14 @@ class Database(metaclass=Singleton):
             result = session.scalar(stmt)
         return result
 
+    def get_score_best(self, song_id: str, rating_class: int):
+        stmt = select(ScoreBest).where(
+            (ScoreBest.song_id == song_id) & (ScoreBest.rating_class == rating_class)
+        )
+        with self.sessionmaker() as session:
+            result = session.scalar(stmt)
+        return result
+
     def insert_score(self, score: Score):
         with self.sessionmaker() as session:
             session.add(score)
