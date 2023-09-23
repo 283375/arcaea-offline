@@ -2,7 +2,7 @@ from typing import List, Union
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from whoosh.analysis import LowercaseFilter, RegexTokenizer
+from whoosh.analysis import NgramFilter, StandardAnalyzer
 from whoosh.fields import ID, KEYWORD, TEXT, Schema
 from whoosh.filedb.filestore import RamStorage
 from whoosh.qparser import FuzzyTermPlugin, MultifieldParser, OrGroup
@@ -13,7 +13,7 @@ from .utils.search_title import recover_search_title
 
 class Searcher:
     def __init__(self):
-        self.text_analyzer = RegexTokenizer() | LowercaseFilter()
+        self.text_analyzer = StandardAnalyzer() | NgramFilter(minsize=2, maxsize=5)
         self.song_schema = Schema(
             song_id=ID(stored=True, unique=True),
             title=TEXT(analyzer=self.text_analyzer, spelling=True),
@@ -107,5 +107,5 @@ class Searcher:
         query_string = f"{string}"
         query = self.default_query_parser.parse(query_string)
         with self.index.searcher() as searcher:
-            results = list(searcher.search(query, limit=limit))
-        return results
+            results = searcher.search(query, limit=limit)
+            return [result.get("song_id") for result in results]
