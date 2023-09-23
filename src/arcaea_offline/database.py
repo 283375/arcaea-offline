@@ -283,7 +283,7 @@ class Database(metaclass=Singleton):
             session.delete(score)
             session.commit()
 
-    def recommend_charts(self, play_result: float):
+    def recommend_charts(self, play_result: float, bounds: float = 0.1):
         base_constant = math.ceil(play_result * 10)
 
         results = []
@@ -306,6 +306,8 @@ class Database(metaclass=Singleton):
                         (ScoreBest.song_id == chart.song_id)
                         & (ScoreBest.rating_class == chart.rating_class)
                         & (ScoreBest.score >= min_score)
+                        & (play_result - bounds < ScoreBest.potential)
+                        & (ScoreBest.potential < play_result + bounds)
                     )
                     if session.scalar(score_best_stmt):
                         chart_id = f"{chart.song_id},{chart.rating_class}"
