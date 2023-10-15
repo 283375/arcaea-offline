@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import TEXT, case, func, inspect, select
+from sqlalchemy import TEXT, case, func, inspect, select, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy_utils import create_view
 
@@ -78,10 +78,16 @@ class ScoreCalculated(ScoresViewBase):
             Score.score,
             Score.pure,
             (
-                Score.score
-                - func.floor(
-                    (Score.pure * 10000000.0 / ChartInfo.notes)
-                    + (Score.far * 0.5 * 10000000.0 / ChartInfo.notes)
+                case(
+                    (
+                        (ChartInfo.notes.isnot(None) & ChartInfo.notes != 0),
+                        Score.score
+                        - func.floor(
+                            (Score.pure * 10000000.0 / ChartInfo.notes)
+                            + (Score.far * 0.5 * 10000000.0 / ChartInfo.notes)
+                        ),
+                    ),
+                    else_=text("NULL"),
                 )
             ).label("shiny_pure"),
             Score.far,
