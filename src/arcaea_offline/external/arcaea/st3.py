@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ...models.scores import Score
-from .common import ArcaeaParser
+from .common import ArcaeaParser, fix_timestamp
 
 logger = logging.getLogger(__name__)
 
@@ -37,9 +37,6 @@ class St3ScoreParser(ArcaeaParser):
                     (song_id, rating_class),
                 ).fetchone()[0]
 
-                date_str = str(date)
-                date = None if len(date_str) < 7 else int(date_str.ljust(10, "0"))
-
                 items.append(
                     Score(
                         song_id=song_id,
@@ -48,10 +45,10 @@ class St3ScoreParser(ArcaeaParser):
                         pure=pure,
                         far=far,
                         lost=lost,
-                        date=date,
+                        date=fix_timestamp(date),
                         modifier=modifier,
                         clear_type=clear_type,
-                        comment="Imported from st3",
+                        comment=f"Parsed from st3",
                     )
                 )
 
