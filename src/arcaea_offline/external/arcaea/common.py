@@ -31,7 +31,7 @@ def fix_timestamp(timestamp: int) -> Union[int, None]:
     if digits < 5:
         return None
     timestamp_str = str(timestamp)
-    current_timestamp_digits = int(math.log10(int(time.time() / 1000))) + 1
+    current_timestamp_digits = int(math.log10(int(time.time()))) + 1
     timestamp_str = timestamp_str.ljust(current_timestamp_digits, "0")
     return int(timestamp_str, 10)
 
