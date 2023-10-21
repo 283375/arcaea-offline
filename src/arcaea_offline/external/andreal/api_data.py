@@ -84,11 +84,15 @@ class AndrealImageGeneratorApiDataConverter:
             raise ValueError("No score available.")
         best30_avg = self.session.scalar(select(CalculatedPotential.b30))
 
+        best30_overflow = (
+            [self.score(score) for score in scores[30:40]] if len(scores) > 30 else []
+        )
+
         return {
             "content": {
                 "account_info": self.account_info(),
                 "best30_avg": best30_avg,
                 "best30_list": [self.score(score) for score in scores[:30]],
-                "best30_overflow": [self.score(score) for score in scores[-10:]],
+                "best30_overflow": best30_overflow,
             }
         }
