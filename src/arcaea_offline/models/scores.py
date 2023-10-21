@@ -80,7 +80,12 @@ class ScoreCalculated(ScoresViewBase):
             (
                 case(
                     (
-                        (ChartInfo.notes.isnot(None) & ChartInfo.notes != 0),
+                        (
+                            ChartInfo.notes.is_not(None)
+                            & Score.pure.is_not(None)
+                            & Score.far.is_not(None)
+                            & (ChartInfo.notes != 0)
+                        ),
                         Score.score
                         - func.floor(
                             (Score.pure * 10000000.0 / ChartInfo.notes)
