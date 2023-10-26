@@ -27,7 +27,7 @@ def fix_timestamp(timestamp: int) -> Union[int, None]:
     # but that's way too later than 9999-12-31 23:59:59, 253402271999,
     # I don't think Arcaea would still be an active updated game by then.
     # so don't mind those small issues, just use this.
-    digits = int(math.log10(timestamp)) + 1
+    digits = int(math.log10(abs(timestamp))) + 1 if timestamp != 0 else 1
     if digits < 5:
         return None
     timestamp_str = str(timestamp)
