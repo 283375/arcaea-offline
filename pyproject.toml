@@ -29,4 +29,4 @@ profile = "black"
 src_paths = ["src/arcaea_offline"]
 
 [tool.pyright]
-ignore = ["**/__debug*.*"]
+ignore = ["build/"]

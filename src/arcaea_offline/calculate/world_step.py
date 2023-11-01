@@ -97,9 +97,8 @@ class LegacyMapStepBooster(StepBooster):
 
     def final_value(self) -> Decimal:
         stamina_multiplier = Decimal(self.stamina)
-        if self.fragments is None:
-            fragments_multiplier = Decimal(1)
-        elif self.fragments == 100:
+        fragments_multiplier = Decimal(1)
+        if self.fragments == 100:
             fragments_multiplier = Decimal("1.1")
         elif self.fragments == 250:
             fragments_multiplier = Decimal("1.25")
@@ -118,7 +117,7 @@ def calculate_step_original(
     *,
     partner_bonus: Optional[PartnerBonus] = None,
     step_booster: Optional[StepBooster] = None,
-):
+) -> Decimal:
     ptt = play_result.play_rating
     step = play_result.partner_step
     if partner_bonus:
@@ -128,13 +127,13 @@ def calculate_step_original(
         partner_bonus_step = Decimal("0")
         partner_bonus_multiplier = Decimal("1.0")
 
-    play_result = (Decimal("2.45") * ptt.sqrt() + Decimal("2.5")) * (step / 50)
-    play_result += partner_bonus_step
-    play_result *= partner_bonus_multiplier
+    result = (Decimal("2.45") * ptt.sqrt() + Decimal("2.5")) * (step / 50)
+    result += partner_bonus_step
+    result *= partner_bonus_multiplier
     if step_booster:
-        play_result *= step_booster.final_value()
+        result *= step_booster.final_value()
 
-    return play_result
+    return result
 
 
 def calculate_step(
@@ -142,12 +141,12 @@ def calculate_step(
     *,
     partner_bonus: Optional[PartnerBonus] = None,
     step_booster: Optional[StepBooster] = None,
-):
-    play_result_original = calculate_step_original(
+) -> Decimal:
+    result_original = calculate_step_original(
         play_result, partner_bonus=partner_bonus, step_booster=step_booster
     )
 
-    return round(play_result_original, 1)
+    return round(result_original, 1)
 
 
 def calculate_play_rating_from_step(

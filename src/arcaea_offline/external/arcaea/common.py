@@ -86,7 +86,7 @@ class ArcaeaParser:
                 # or maybe a `pathlib.Path` subset
                 # or an `importlib.resources.abc.Traversable` like object
                 # e.g. `zipfile.Path`
-                file_handle = self.filepath.open(mode="r", encoding="utf-8")
+                file_handle = self.filepath.open(mode="r", encoding="utf-8")  # type: ignore
             except Exception as e:
                 raise ValueError("Invalid `filepath`.") from e
 
