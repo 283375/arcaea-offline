@@ -122,7 +122,9 @@ class ArcSongJsonBuilder:
 
         pack = self.session.scalar(select(Pack).where(Pack.id == song.set))
         if not pack:
-            logger.warning(f'Cannot find pack "{song.set}", using placeholder instead.')
+            logger.warning(
+                'Cannot find pack "%s", using placeholder instead.', song.set
+            )
             pack = Pack(id="unknown", name="Unknown", description="__PLACEHOLDER__")
         song_localized = self.session.scalar(
             select(SongLocalized).where(SongLocalized.id == song.id)

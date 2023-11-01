@@ -1,8 +1,12 @@
+# pylint: disable=too-few-public-methods
+
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm.exc import DetachedInstanceError
 
 
 class ReprHelper:
+    # pylint: disable=no-member
+
     def _repr(self, **kwargs) -> str:
         """
         Helper for __repr__

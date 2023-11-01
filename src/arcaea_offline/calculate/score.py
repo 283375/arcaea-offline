@@ -16,10 +16,9 @@ def calculate_score_range(notes: int, pure: int, far: int):
 def calculate_score_modifier(score: int) -> Decimal:
     if score >= 10000000:
         return Decimal(2)
-    elif score >= 9800000:
+    if score >= 9800000:
         return Decimal(1) + (Decimal(score - 9800000) / 200000)
-    else:
-        return Decimal(score - 9500000) / 300000
+    return Decimal(score - 9500000) / 300000
 
 
 def calculate_play_rating(constant: int, score: int) -> Decimal:
@@ -35,6 +34,7 @@ def calculate_shiny_pure(notes: int, score: int, pure: int, far: int) -> int:
 
 @dataclass
 class ConstantsFromPlayRatingResult:
+    # pylint: disable=invalid-name
     EXPlus: Tuple[Decimal, Decimal]
     EX: Tuple[Decimal, Decimal]
     AA: Tuple[Decimal, Decimal]
@@ -44,10 +44,12 @@ class ConstantsFromPlayRatingResult:
 
 
 def calculate_constants_from_play_rating(play_rating: Union[Decimal, str, float, int]):
+    # pylint: disable=no-value-for-parameter
+
     play_rating = Decimal(play_rating)
 
     ranges = []
-    for upperScore, lowerScore in [
+    for upper_score, lower_score in [
         (10000000, 9900000),
         (9899999, 9800000),
         (9799999, 9500000),
@@ -55,10 +57,10 @@ def calculate_constants_from_play_rating(play_rating: Union[Decimal, str, float,
         (9199999, 8900000),
         (8899999, 8600000),
     ]:
-        upperScoreModifier = calculate_score_modifier(upperScore)
-        lowerScoreModifier = calculate_score_modifier(lowerScore)
+        upper_score_modifier = calculate_score_modifier(upper_score)
+        lower_score_modifier = calculate_score_modifier(lower_score)
         ranges.append(
-            (play_rating - upperScoreModifier, play_rating - lowerScoreModifier)
+            (play_rating - upper_score_modifier, play_rating - lower_score_modifier)
         )
 
     return ConstantsFromPlayRatingResult(*ranges)

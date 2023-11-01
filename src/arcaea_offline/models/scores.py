@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods, duplicate-code
+
 from typing import Optional
 
 from sqlalchemy import TEXT, case, func, inspect, select, text
@@ -37,7 +39,8 @@ class Score(ScoresBase):
         comment="0: NORMAL, 1: EASY, 2: HARD"
     )
     clear_type: Mapped[Optional[int]] = mapped_column(
-        comment="0: TRACK LOST, 1: NORMAL CLEAR, 2: FULL RECALL, 3: PURE MEMORY, 4: EASY CLEAR, 5: HARD CLEAR"
+        comment="0: TRACK LOST, 1: NORMAL CLEAR, 2: FULL RECALL, "
+        "3: PURE MEMORY, 4: EASY CLEAR, 5: HARD CLEAR"
     )
     comment: Mapped[Optional[str]] = mapped_column(TEXT())
 

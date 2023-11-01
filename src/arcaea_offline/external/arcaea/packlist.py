@@ -6,9 +6,6 @@ from .common import ArcaeaParser, is_localized, set_model_localized_attrs
 
 
 class PacklistParser(ArcaeaParser):
-    def __init__(self, filepath):
-        super().__init__(filepath)
-
     def parse(self) -> List[Union[Pack, PackLocalized]]:
         packlist_json_root = json.loads(self.read_file_text())
 

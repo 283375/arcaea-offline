@@ -39,10 +39,7 @@ def fix_timestamp(timestamp: int) -> Union[int, None]:
 def to_db_value(val: Any) -> Any:
     if not val:
         return None
-    elif isinstance(val, list):
-        return json.dumps(val, ensure_ascii=False)
-    else:
-        return val
+    return json.dumps(val, ensure_ascii=False) if isinstance(val, list) else val
 
 
 def is_localized(item: dict, key: str, append_localized: bool = True):
@@ -94,7 +91,7 @@ class ArcaeaParser:
             return file_handle.read()
 
     def parse(self) -> List[DeclarativeBase]:
-        ...
+        raise NotImplementedError()
 
     def write_database(self, session: Session):
         results = self.parse()

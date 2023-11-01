@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods, duplicate-code
+
 from typing import Optional
 
 from sqlalchemy import TEXT, ForeignKey, func, select
@@ -154,7 +156,7 @@ class ChartInfo(SongsBase):
         ForeignKey("difficulties.rating_class"), primary_key=True
     )
     constant: Mapped[int] = mapped_column(
-        comment="real_constant * 10. For example, Crimson Throne [FTR] is 10.4, then store 104 here."
+        comment="real_constant * 10. For example, Crimson Throne [FTR] is 10.4, then store 104."
     )
     notes: Mapped[Optional[int]]
 

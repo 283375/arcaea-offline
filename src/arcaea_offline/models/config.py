@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods
+
 from sqlalchemy import TEXT
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 

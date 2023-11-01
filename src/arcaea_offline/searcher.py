@@ -103,7 +103,7 @@ class Searcher:
 
         return list(results)
 
-    def search(self, string: str, *, limit: int = 10, fuzzy_distance: int = 10):
+    def search(self, string: str, *, limit: int = 10):
         query_string = f"{string}"
         query = self.default_query_parser.parse(query_string)
         with self.index.searcher() as searcher:

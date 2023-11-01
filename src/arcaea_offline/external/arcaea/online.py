@@ -37,9 +37,6 @@ class TWebApiRatingMeResult(TypedDict):
 
 
 class ArcaeaOnlineParser(ArcaeaParser):
-    def __init__(self, filepath):
-        super().__init__(filepath)
-
     def parse(self) -> List[Score]:
         api_result_root: TWebApiRatingMeResult = json.loads(self.read_file_text())
 

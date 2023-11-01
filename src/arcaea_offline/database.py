@@ -5,12 +5,29 @@ from typing import Iterable, List, Optional, Type, Union
 from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, sessionmaker
 
-from .calculate import calculate_score_modifier
 from .external.arcsong.arcsong_json import ArcSongJsonBuilder
 from .external.exports import ScoreExport, exporters
-from .models.config import *
-from .models.scores import *
-from .models.songs import *
+from .models.config import ConfigBase, Property
+from .models.scores import (
+    CalculatedPotential,
+    Score,
+    ScoreBest,
+    ScoreCalculated,
+    ScoresBase,
+    ScoresViewBase,
+)
+from .models.songs import (
+    Chart,
+    ChartInfo,
+    Difficulty,
+    DifficultyLocalized,
+    Pack,
+    PackLocalized,
+    Song,
+    SongLocalized,
+    SongsBase,
+    SongsViewBase,
+)
 from .singleton import Singleton
 
 logger = logging.getLogger(__name__)
@@ -27,17 +44,20 @@ class Database(metaclass=Singleton):
             if isinstance(self.engine, Engine):
                 return
             raise ValueError("No sqlalchemy.Engine instance specified before.")
-        elif isinstance(engine, Engine):
-            if isinstance(self.engine, Engine):
-                logger.warning(
-                    f"A sqlalchemy.Engine instance {self.engine} has been specified "
-                    f"and will be replaced to {engine}"
-                )
-            self.engine = engine
-        else:
+
+        if not isinstance(engine, Engine):
             raise ValueError(
                 f"A sqlalchemy.Engine instance expected, not {repr(engine)}"
             )
+
+        if isinstance(self.engine, Engine):
+            logger.warning(
+                "A sqlalchemy.Engine instance %r has been specified "
+                "and will be replaced to %r",
+                self.engine,
+                engine,
+            )
+        self.engine = engine
 
     @property
     def engine(self) -> Engine:
@@ -60,7 +80,8 @@ class Database(metaclass=Singleton):
         # create tables & views
         if checkfirst:
             # > https://github.com/kvesteri/sqlalchemy-utils/issues/396
-            # > view.create_view() causes DuplicateTableError on Base.metadata.create_all(checkfirst=True)
+            # > view.create_view() causes DuplicateTableError on
+            # > Base.metadata.create_all(checkfirst=True)
             # so if `checkfirst` is True, drop these views before creating
             SongsViewBase.metadata.drop_all(self.engine)
             ScoresViewBase.metadata.drop_all(self.engine)

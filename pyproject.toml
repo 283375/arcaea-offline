@@ -30,3 +30,14 @@ src_paths = ["src/arcaea_offline"]
 
 [tool.pyright]
 ignore = ["build/"]
+
+[tool.pylint.main]
+jobs = 0
+
+[tool.pylint.logging]
+disable = [
+  "missing-module-docstring",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "not-callable", # false positive to sqlalchemy `func.*`, remove this when pylint-dev/pylint(#8138) closed
+]

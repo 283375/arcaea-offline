@@ -12,15 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 class St3ScoreParser(ArcaeaParser):
-    def __init__(self, filepath):
-        super().__init__(filepath)
-
     def parse(self) -> List[Score]:
         items = []
         with sqlite3.connect(self.filepath) as st3_conn:
             cursor = st3_conn.cursor()
             db_scores = cursor.execute(
-                "SELECT songId, songDifficulty, score, perfectCount, nearCount, missCount, date, modifier FROM scores"
+                "SELECT songId, songDifficulty, score, perfectCount, nearCount, missCount, "
+                "date, modifier FROM scores"
             ).fetchall()
             for (
                 song_id,
@@ -48,7 +46,7 @@ class St3ScoreParser(ArcaeaParser):
                         date=fix_timestamp(date),
                         modifier=modifier,
                         clear_type=clear_type,
-                        comment=f"Parsed from st3",
+                        comment="Parsed from st3",
                     )
                 )
 
@@ -67,8 +65,9 @@ class St3ScoreParser(ArcaeaParser):
 
             if query_score and skip_duplicate:
                 logger.info(
-                    f"{repr(parsed_score)} skipped because "
-                    f"potential duplicate item {repr(query_score)} found."
+                    "%r skipped because potential duplicate item %r found.",
+                    parsed_score,
+                    query_score,
                 )
                 continue
             session.add(parsed_score)

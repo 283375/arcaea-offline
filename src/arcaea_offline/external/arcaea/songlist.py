@@ -6,9 +6,6 @@ from .common import ArcaeaParser, is_localized, set_model_localized_attrs, to_db
 
 
 class SonglistParser(ArcaeaParser):
-    def __init__(self, filepath):
-        super().__init__(filepath)
-
     def parse(
         self,
     ) -> List[Union[Song, SongLocalized, Difficulty, DifficultyLocalized]]:
@@ -61,9 +58,6 @@ class SonglistParser(ArcaeaParser):
 
 
 class SonglistDifficultiesParser(ArcaeaParser):
-    def __init__(self, filepath):
-        self.filepath = filepath
-
     def parse(self) -> List[Union[Difficulty, DifficultyLocalized]]:
         songlist_json_root = json.loads(self.read_file_text())
 
