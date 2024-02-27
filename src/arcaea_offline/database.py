@@ -6,7 +6,7 @@ from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, sessionmaker
 
 from .external.arcsong.arcsong_json import ArcSongJsonBuilder
-from .external.exports import ScoreExport, exporters
+from .external.exports import ArcaeaOfflineDEFV2_Score, ScoreExport, exporters
 from .models.config import ConfigBase, Property
 from .models.scores import (
     CalculatedPotential,
@@ -409,6 +409,15 @@ class Database(metaclass=Singleton):
     def export_scores(self) -> List[ScoreExport]:
         scores = self.get_scores()
         return [exporters.score(score) for score in scores]
+
+    def export_scores_def_v2(self) -> ArcaeaOfflineDEFV2_Score:
+        scores = self.get_scores()
+        return {
+            "$schema": "https://arcaeaoffline.sevive.xyz/schemas/def/v2/score.schema.json",
+            "type": "score",
+            "version": 2,
+            "scores": [exporters.score_def_v2(score) for score in scores],
+        }
 
     def generate_arcsong(self):
         with self.sessionmaker() as session:

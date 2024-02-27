@@ -1,2 +1,2 @@
 from . import exporters
-from .types import ScoreExport
+from .types import ArcaeaOfflineDEFV2_Score, ScoreExport
