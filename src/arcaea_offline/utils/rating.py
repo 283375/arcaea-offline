@@ -5,6 +5,7 @@ RATING_CLASS_TEXT_MAP = {
     1: "Present",
     2: "Future",
     3: "Beyond",
+    4: "Eternal",
 }
 
 RATING_CLASS_SHORT_TEXT_MAP = {
@@ -12,6 +13,7 @@ RATING_CLASS_SHORT_TEXT_MAP = {
     1: "PRS",
     2: "FTR",
     3: "BYD",
+    4: "ETR",
 }
 
 
