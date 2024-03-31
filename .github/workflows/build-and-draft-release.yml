@@ -29,6 +29,14 @@ jobs:
           pip install build
           python -m build
 
+      - name: Remove `v` in tag name
+        uses: mad9000/actions-find-and-replace-string@5
+        id: tagNameReplaced
+        with:
+          source: ${{ github.ref_name }}
+          find: "v"
+          replace: ""
+
       - name: Draft a release
         uses: softprops/action-gh-release@v2
         with:
@@ -36,5 +44,5 @@ jobs:
           draft: true
           generate_release_notes: true
           files: |
-            dist/arcaea_offline-${{ github.ref_name }}*.whl
-            dist/arcaea-offline-${{ github.ref_name }}.tar.gz
+            dist/arcaea_offline-${{ steps.tagNameReplaced.outputs.value }}*.whl
+            dist/arcaea-offline-${{ steps.tagNameReplaced.outputs.value }}.tar.gz
