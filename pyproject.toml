@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arcaea-offline"
-version = "0.2.1"
+version = "0.2.2"
 authors = [{ name = "283375", email = "log_283375@163.com" }]
 description = "Manage your local Arcaea score database."
 readme = "README.md"
