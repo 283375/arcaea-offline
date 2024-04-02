@@ -5,10 +5,14 @@ from typing import Iterable, List, Optional, Type, Union
 from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, sessionmaker
 
-from .external.arcsong.arcsong_json import ArcSongJsonBuilder
-from .external.exports import ArcaeaOfflineDEFV2_Score, ScoreExport, exporters
-from .models.config import ConfigBase, Property
-from .models.scores import (
+from arcaea_offline.external.arcsong.arcsong_json import ArcSongJsonBuilder
+from arcaea_offline.external.exports import (
+    ArcaeaOfflineDEFV2_Score,
+    ScoreExport,
+    exporters,
+)
+from arcaea_offline.models.config import ConfigBase, Property
+from arcaea_offline.models.scores import (
     CalculatedPotential,
     Score,
     ScoreBest,
@@ -16,7 +20,7 @@ from .models.scores import (
     ScoresBase,
     ScoresViewBase,
 )
-from .models.songs import (
+from arcaea_offline.models.songs import (
     Chart,
     ChartInfo,
     Difficulty,
@@ -28,7 +32,7 @@ from .models.songs import (
     SongsBase,
     SongsViewBase,
 )
-from .singleton import Singleton
+from arcaea_offline.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
