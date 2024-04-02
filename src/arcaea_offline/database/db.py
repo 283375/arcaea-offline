@@ -11,8 +11,10 @@ from arcaea_offline.external.exports import (
     ScoreExport,
     exporters,
 )
-from arcaea_offline.models.config import ConfigBase, Property
-from arcaea_offline.models.scores import (
+from arcaea_offline.singleton import Singleton
+
+from .models.v4.config import ConfigBase, Property
+from .models.v4.scores import (
     CalculatedPotential,
     Score,
     ScoreBest,
@@ -20,7 +22,7 @@ from arcaea_offline.models.scores import (
     ScoresBase,
     ScoresViewBase,
 )
-from arcaea_offline.models.songs import (
+from .models.v4.songs import (
     Chart,
     ChartInfo,
     Difficulty,
@@ -32,7 +34,6 @@ from arcaea_offline.models.songs import (
     SongsBase,
     SongsViewBase,
 )
-from arcaea_offline.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
