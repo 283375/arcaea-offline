@@ -10,10 +10,8 @@ description = "Manage your local Arcaea score database."
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
-  "beautifulsoup4==4.12.2",
   "SQLAlchemy==2.0.20",
   "SQLAlchemy-Utils==0.41.1",
-  "Whoosh==2.7.4",
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
