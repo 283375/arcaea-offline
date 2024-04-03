@@ -1,7 +1,7 @@
 from enum import IntEnum
 
 
-class ArcaeaScoreClearType(IntEnum):
+class ArcaeaPlayResultClearType(IntEnum):
     TRACK_LOST = 0
     NORMAL_CLEAR = 1
     FULL_RECALL = 2

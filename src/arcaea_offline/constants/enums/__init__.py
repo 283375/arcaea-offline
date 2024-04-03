@@ -1,3 +1,3 @@
-from .clear_type import ArcaeaScoreClearType
-from .modifier import ArcaeaScoreModifier
+from .clear_type import ArcaeaPlayResultClearType
+from .modifier import ArcaeaPlayResultModifier
 from .rating_class import ArcaeaRatingClass
