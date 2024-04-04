@@ -8,8 +8,13 @@
 
 ## WIP
 
-> **Warning**
+> [!CAUTION]
 > 该项目正处于早期开发阶段，不能保证稳定性，且 API 可能随时变动。
+
+> [!IMPORTANT]
+> v0.3.0 正在[此分支](https://github.com/283375/arcaea-offline/tree/0.3.0-refactor)下开发！
+>
+> 在 v0.3.0 准备好发布后，此存储库将被迁移至 *[ArcaeaOffline](https://github.com/ArcaeaOffline)/core-python*。
 
 ## 这是什么？
 

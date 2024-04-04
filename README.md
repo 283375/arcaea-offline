@@ -10,8 +10,13 @@ English | [简体中文](./README.zh_Hans.md)
 
 ## WIP
 
-> **Warning**
+> [!CAUTION]
 > This project is under active development, thus it is unstable and API may change frequently.
+
+> [!IMPORTANT]
+> v0.3.0 is under development, check out [this branch](https://github.com/283375/arcaea-offline/tree/0.3.0-refactor)!
+>
+> Once v0.3.0 is ready for release, this repository will be transferred to *[ArcaeaOffline](https://github.com/ArcaeaOffline)/core-python*
 
 ## What is this？
 
