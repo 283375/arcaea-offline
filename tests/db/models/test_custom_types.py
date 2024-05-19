@@ -1,7 +1,7 @@
 from typing import Optional
 
 from sqlalchemy import text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
 from arcaea_offline.constants.enums import (
     ArcaeaPlayResultClearType,
@@ -47,16 +47,16 @@ class ModifierTestModel(Base):
 
 
 class TestCustomTypes:
-    def _common_test_method(self, db_session, obj: Base, value_in_db):
+    def _common_test_method(self, session: Session, obj: Base, value_in_db):
         """
-        This method stores the `obj` into the given `db_session`,
+        This method stores the `obj` into the given `session`,
         then fetches the raw value of `obj.value` from database,
         and asserts that the value is equal to `value_in_db`.
         """
-        db_session.add(obj)
-        db_session.commit()
+        session.add(obj)
+        session.commit()
 
-        exec_result = db_session.execute(
+        exec_result = session.execute(
             text(
                 f"SELECT value FROM {obj.__tablename__} WHERE id = {obj.id}"  # type: ignore
             )
