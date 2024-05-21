@@ -9,16 +9,16 @@ from sqlalchemy_utils import create_view
 from .common import ReprHelper
 
 __all__ = [
-    "SongsBase",
+    "Chart",
+    "ChartInfo",
+    "Difficulty",
+    "DifficultyLocalized",
     "Pack",
     "PackLocalized",
     "Song",
     "SongLocalized",
-    "Difficulty",
-    "DifficultyLocalized",
-    "ChartInfo",
+    "SongsBase",
     "SongsViewBase",
-    "Chart",
 ]
 
 

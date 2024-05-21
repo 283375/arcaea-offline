@@ -19,3 +19,24 @@ from .songs import (
     SongsBase,
     SongsViewBase,
 )
+
+__all__ = [
+    "CalculatedPotential",
+    "Chart",
+    "ChartInfo",
+    "ConfigBase",
+    "Difficulty",
+    "DifficultyLocalized",
+    "Pack",
+    "PackLocalized",
+    "Property",
+    "Score",
+    "ScoreBest",
+    "ScoreCalculated",
+    "ScoresBase",
+    "ScoresViewBase",
+    "Song",
+    "SongLocalized",
+    "SongsBase",
+    "SongsViewBase",
+]

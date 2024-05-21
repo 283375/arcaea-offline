@@ -10,12 +10,12 @@ from .common import ReprHelper
 from .songs import ChartInfo, Difficulty
 
 __all__ = [
-    "ScoresBase",
-    "Score",
-    "ScoresViewBase",
-    "ScoreCalculated",
-    "ScoreBest",
     "CalculatedPotential",
+    "Score",
+    "ScoreBest",
+    "ScoreCalculated",
+    "ScoresBase",
+    "ScoresViewBase",
 ]
 
 
