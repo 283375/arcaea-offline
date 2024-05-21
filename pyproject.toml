@@ -18,24 +18,34 @@ classifiers = [
   "Programming Language :: Python :: 3",
 ]
 
+[project.optional-dependencies]
+dev = ["ruff~=0.4", "pre-commit~=3.3", "pytest~=7.4", "tox~=4.11"]
+
 [project.urls]
 "Homepage" = "https://github.com/283375/arcaea-offline"
 "Bug Tracker" = "https://github.com/283375/arcaea-offline/issues"
 
-[tool.isort]
-profile = "black"
-src_paths = ["src/arcaea_offline"]
-
 [tool.pyright]
 ignore = ["build/"]
 
-[tool.pylint.main]
-jobs = 0
-
-[tool.pylint.logging]
-disable = [
-  "missing-module-docstring",
-  "missing-class-docstring",
-  "missing-function-docstring",
-  "not-callable", # false positive to sqlalchemy `func.*`, remove this when pylint-dev/pylint(#8138) closed
+[tool.ruff.lint]
+# Full list: https://docs.astral.sh/ruff/rules
+select = [
+  "E",   # pycodestyle (Error)
+  "W",   # pycodestyle (Warning)
+  "F",   # pyflakes
+  "I",   # isort
+  "PL",  # pylint
+  "N",   # pep8-naming
+  "FBT", # flake8-boolean-trap
+  "A",   # flake8-builtins
+  "DTZ", # flake8-datetimez
+  "LOG", # flake8-logging
+  "Q",   # flake8-quotes
+  "G",   # flake8-logging-format
+  "PIE", # flake8-pie
+  "PT",  # flake8-pytest-style
+]
+ignore = [
+  "E501", # line-too-long
 ]
