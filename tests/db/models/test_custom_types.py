@@ -41,7 +41,7 @@ class TestCustomTypes:
                 )
             ).one()[0]
 
-        TestBase.metadata.create_all(db_session.bind)
+        TestBase.metadata.create_all(db_session.bind, checkfirst=False)
 
         basic_obj = IntEnumTestModel(id=1, value=TestIntEnum.TWO)
         null_obj = IntEnumTestModel(id=2, value=None)
@@ -53,7 +53,7 @@ class TestCustomTypes:
         assert _query_value(2) is None
 
     def test_tz_datetime(self, db_session):
-        TestBase.metadata.create_all(db_session.bind)
+        TestBase.metadata.create_all(db_session.bind, checkfirst=False)
 
         dt1 = datetime.now(tz=timezone(timedelta(hours=8)))
 
