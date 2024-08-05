@@ -9,10 +9,7 @@ authors = [{ name = "283375", email = "log_283375@163.com" }]
 description = "Manage your local Arcaea score database."
 readme = "README.md"
 requires-python = ">=3.8"
-dependencies = [
-  "SQLAlchemy==2.0.20",
-  "SQLAlchemy-Utils==0.41.1",
-]
+dependencies = ["SQLAlchemy==2.0.20", "SQLAlchemy-Utils==0.41.1"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3",
@@ -48,4 +45,9 @@ select = [
 ]
 ignore = [
   "E501", # line-too-long
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  "PLR2004", # magic-value-comparison
 ]

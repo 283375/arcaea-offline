@@ -1,0 +1,117 @@
+{
+  "_comment": "A quick preview of the data in st3-test.db",
+  "scores": [
+    {
+      "id": 1,
+      "version": 1,
+      "score": 9441167,
+      "shinyPerfectCount": 753,
+      "perfectCount": 895,
+      "nearCount": 32,
+      "missCount": 22,
+      "date": 1722100000,
+      "songId": "test1",
+      "songDifficulty": 2,
+      "modifier": 2,
+      "health": 0,
+      "ct": 0
+    },
+    {
+      "id": 2,
+      "version": 1,
+      "score": 9752087,
+      "shinyPerfectCount": 914,
+      "perfectCount": 1024,
+      "nearCount": 29,
+      "missCount": 12,
+      "date": 1722200000,
+      "songId": "test2",
+      "songDifficulty": 2,
+      "modifier": 0,
+      "health": 100,
+      "ct": 0
+    },
+    {
+      "id": 3,
+      "version": 1,
+      "score": 9750000,
+      "shinyPerfectCount": 900,
+      "perfectCount": 1000,
+      "nearCount": 20,
+      "missCount": 10,
+      "date": 1722200000,
+      "songId": "corrupt1",
+      "songDifficulty": 5,
+      "modifier": 0,
+      "health": 0,
+      "ct": 0
+    },
+    {
+      "id": 4,
+      "version": 1,
+      "score": 9750000,
+      "shinyPerfectCount": 900,
+      "perfectCount": 1000,
+      "nearCount": 20,
+      "missCount": 10,
+      "date": 1722200000,
+      "songId": "corrupt2",
+      "songDifficulty": 2,
+      "modifier": 9,
+      "health": 0,
+      "ct": 0
+    },
+    {
+      "id": 5,
+      "version": 1,
+      "score": 9750000,
+      "shinyPerfectCount": 900,
+      "perfectCount": 1000,
+      "nearCount": 20,
+      "missCount": 10,
+      "date": 1,
+      "songId": "date1",
+      "songDifficulty": 2,
+      "modifier": 0,
+      "health": 0,
+      "ct": 0
+    }
+  ],
+  "cleartypes": [
+    {
+      "id": 1,
+      "songId": "test1",
+      "songDifficulty": 2,
+      "clearType": 0,
+      "ct": 0
+    },
+    {
+      "id": 2,
+      "songId": "test2",
+      "songDifficulty": 2,
+      "clearType": 1,
+      "ct": 0
+    },
+    {
+      "id": 3,
+      "songId": "corrupt1",
+      "songDifficulty": 5,
+      "clearType": 0,
+      "ct": 0
+    },
+    {
+      "id": 4,
+      "songId": "corrupt2",
+      "songDifficulty": 2,
+      "clearType": 7,
+      "ct": 0
+    },
+    {
+      "id": 5,
+      "songId": "date1",
+      "songDifficulty": 2,
+      "clearType": 1,
+      "ct": 0
+    }
+  ]
+}
