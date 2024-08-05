@@ -1,4 +1,5 @@
-from ...models import Score
+from arcaea_offline.database.models.v4 import Score
+
 from .types import ArcaeaOfflineDEFV2_ScoreItem, ScoreExport
 
 

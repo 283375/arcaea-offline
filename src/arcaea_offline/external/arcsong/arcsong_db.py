@@ -3,7 +3,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from ...models.songs import ChartInfo
+from arcaea_offline.database.models.v4 import ChartInfo
 
 
 class ArcsongDbParser:

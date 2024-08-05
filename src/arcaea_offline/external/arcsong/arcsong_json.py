@@ -5,7 +5,7 @@ from typing import List, Optional, TypedDict
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from ...models import (
+from arcaea_offline.database.models.v4 import (
     ChartInfo,
     Difficulty,
     DifficultyLocalized,
