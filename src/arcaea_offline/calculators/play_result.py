@@ -7,7 +7,7 @@ from arcaea_offline.constants.play_result import ScoreLowerLimits
 
 class PlayResultCalculators:
     @staticmethod
-    def score_possible_range(notes: int, pure: int, far: int) -> tuple[int, int]:
+    def score_possible_range(notes: int, pure: int, far: int) -> Tuple[int, int]:
         """
         Returns the possible range of score based on the given values.
 

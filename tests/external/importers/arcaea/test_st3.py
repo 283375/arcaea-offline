@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import datetime
-from importlib.resources import files
 
 import pytest
 from arcaea_offline.constants.enums.arcaea import (
@@ -14,7 +13,7 @@ import tests.resources
 
 
 class TestSt3Parser:
-    DB_PATH = files(tests.resources).joinpath("st3-test.db")
+    DB_PATH = tests.resources.get_resource("st3-test.db")
 
     @property
     def play_results(self):
