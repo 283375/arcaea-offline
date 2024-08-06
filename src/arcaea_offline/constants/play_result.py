@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ScoreLowerLimits:
+    PM = 10000000
     EX_PLUS = 9900000
     EX = 9800000
     AA = 9500000

@@ -44,9 +44,9 @@ class PlayResultCalculators:
         if score < 0:
             raise ValueError("score cannot be negative")
 
-        if score >= 10000000:
+        if score >= ScoreLowerLimits.PM:
             return Decimal(2)
-        if score >= 9800000:
+        if score >= ScoreLowerLimits.EX:
             return Decimal(1) + (Decimal(score - 9800000) / 200000)
         return Decimal(score - 9500000) / 300000
 
