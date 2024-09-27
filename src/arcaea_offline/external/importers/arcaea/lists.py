@@ -26,7 +26,7 @@ class ArcaeaListParser:
         self.list_text = list_text
 
 
-class PacklistParser(ArcaeaListParser):
+class ArcaeaPacklistParser(ArcaeaListParser):
     def parse(self) -> List[Union[Pack, PackLocalized]]:
         root = json.loads(self.list_text)
 
@@ -57,7 +57,7 @@ class PacklistParser(ArcaeaListParser):
         return results
 
 
-class SonglistParser(ArcaeaListParser):
+class ArcaeaSonglistParser(ArcaeaListParser):
     def parse_songs(self) -> List[Union[Song, SongLocalized, SongSearchWord]]:
         root = json.loads(self.list_text)
 

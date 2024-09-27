@@ -7,7 +7,7 @@ from arcaea_offline.constants.enums.arcaea import (
     ArcaeaPlayResultModifier,
     ArcaeaRatingClass,
 )
-from arcaea_offline.external.importers.arcaea.st3 import St3Parser
+from arcaea_offline.external.importers.arcaea.st3 import ArcaeaSt3Parser
 
 import tests.resources
 
@@ -18,7 +18,7 @@ class TestSt3Parser:
     @property
     def play_results(self):
         conn = sqlite3.connect(str(self.DB_PATH))
-        return St3Parser.parse(conn)
+        return ArcaeaSt3Parser.parse(conn)
 
     def test_basic(self):
         play_results = self.play_results
@@ -51,5 +51,5 @@ class TestSt3Parser:
         assert date1.date is None
 
     def test_invalid_input(self):
-        pytest.raises(TypeError, St3Parser.parse, "abcdefghijklmn")
-        pytest.raises(TypeError, St3Parser.parse, 123456)
+        pytest.raises(TypeError, ArcaeaSt3Parser.parse, "abcdefghijklmn")
+        pytest.raises(TypeError, ArcaeaSt3Parser.parse, 123456)

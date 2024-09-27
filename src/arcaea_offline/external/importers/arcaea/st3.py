@@ -19,7 +19,7 @@ from .common import fix_timestamp
 logger = logging.getLogger(__name__)
 
 
-class St3Parser:
+class ArcaeaSt3Parser:
     @classmethod
     @overload
     def parse(cls, db: sqlite3.Connection) -> List[PlayResult]: ...
