@@ -16,7 +16,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["ruff~=0.4", "pre-commit~=3.3", "pytest~=7.4", "tox~=4.11"]
+dev = ["ruff~=0.6.8", "pre-commit~=3.3", "pytest~=7.4", "tox~=4.11"]
 
 [project.urls]
 "Homepage" = "https://github.com/283375/arcaea-offline"

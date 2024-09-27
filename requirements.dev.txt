@@ -1,4 +1,4 @@
-ruff~=0.4
+ruff~=0.6.8
 pre-commit~=3.3
 pytest~=7.4
 tox~=4.11
