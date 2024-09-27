@@ -2,6 +2,8 @@ import sqlite3
 from datetime import datetime
 
 import pytest
+
+import tests.resources
 from arcaea_offline.constants.enums.arcaea import (
     ArcaeaPlayResultClearType,
     ArcaeaPlayResultModifier,
@@ -9,16 +11,14 @@ from arcaea_offline.constants.enums.arcaea import (
 )
 from arcaea_offline.external.importers.arcaea.st3 import ArcaeaSt3Parser
 
-import tests.resources
+db = sqlite3.connect(":memory:")
+db.executescript(tests.resources.get_resource("st3.sql").read_text(encoding="utf-8"))
 
 
-class TestSt3Parser:
-    DB_PATH = tests.resources.get_resource("st3-test.db")
-
+class TestArcaeaSt3Parser:
     @property
     def play_results(self):
-        conn = sqlite3.connect(str(self.DB_PATH))
-        return ArcaeaSt3Parser.parse(conn)
+        return ArcaeaSt3Parser.parse(db)
 
     def test_basic(self):
         play_results = self.play_results
