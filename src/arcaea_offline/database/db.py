@@ -1,13 +1,11 @@
 import logging
 import math
-from typing import Iterable, List, Optional, Type, Union
+from typing import Iterable, Optional, Type, Union
 
 from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, sessionmaker
 
 from arcaea_offline.external.arcsong.arcsong_json import ArcSongJsonBuilder
-from arcaea_offline.external.exports import exporters
-from arcaea_offline.external.exports.types import ArcaeaOfflineDEFV2_Score, ScoreExport
 from arcaea_offline.singleton import Singleton
 
 from .models.v4.config import ConfigBase, Property
@@ -407,20 +405,6 @@ class Database(metaclass=Singleton):
     # endregion
 
     # region export
-
-    def export_scores(self) -> List[ScoreExport]:
-        scores = self.get_scores()
-        return [exporters.score(score) for score in scores]
-
-    def export_scores_def_v2(self) -> ArcaeaOfflineDEFV2_Score:
-        scores = self.get_scores()
-        return {
-            "$schema": "https://arcaeaoffline.sevive.xyz/schemas/def/v2/score.schema.json",
-            "type": "score",
-            "version": 2,
-            "scores": [exporters.score_def_v2(score) for score in scores],
-        }
-
     def generate_arcsong(self):
         with self.sessionmaker() as session:
             arcsong = ArcSongJsonBuilder(session).generate_arcsong_json()
