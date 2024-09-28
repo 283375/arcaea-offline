@@ -22,7 +22,6 @@ class RatingClassFormatter:
         """
         Returns the capitalized rating class name, e.g. Future.
         """
-        ...
 
     @overload
     @classmethod
@@ -33,7 +32,6 @@ class RatingClassFormatter:
         The integer will be converted to `ArcaeaRatingClass` enum,
         and will return "Unknown" if the convertion fails.
         """
-        ...
 
     @classmethod
     def name(cls, rating_class: Any) -> NAME_FORMAT_RESULTS:
@@ -57,7 +55,6 @@ class RatingClassFormatter:
         """
         Returns the uppercased rating class name, e.g. FTR.
         """
-        ...
 
     @overload
     @classmethod
@@ -68,7 +65,6 @@ class RatingClassFormatter:
         The integer will be converted to `ArcaeaRatingClass` enum,
         and will return "UNK" if the convertion fails.
         """
-        ...
 
     @classmethod
     def abbreviation(cls, rating_class: Any) -> ABBREVIATION_FORMAT_RESULTS:
