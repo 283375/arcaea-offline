@@ -1,10 +1,14 @@
 from typing import List, Optional
 
-from sqlalchemy import ForeignKey, and_, func, select
+from sqlalchemy import Enum, ForeignKey, and_, func, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import create_view
 
-from arcaea_offline.constants.enums import ArcaeaRatingClass, ArcaeaSongSide
+from arcaea_offline.constants.enums.arcaea import (
+    ArcaeaLanguage,
+    ArcaeaRatingClass,
+    ArcaeaSongSide,
+)
 
 from .base import ModelsV5Base, ModelsV5ViewBase, ReprHelper
 
@@ -18,6 +22,11 @@ __all__ = [
     "Song",
     "SongLocalized",
 ]
+
+
+_ArcaeaLanguageEnumType = Enum(
+    ArcaeaLanguage, native_enum=False, values_callable=lambda e: [x.value for x in e]
+)
 
 
 class Pack(ModelsV5Base, ReprHelper):
@@ -40,7 +49,7 @@ class PackLocalized(ModelsV5Base, ReprHelper):
     id: Mapped[str] = mapped_column(
         ForeignKey(Pack.id, onupdate="CASCADE", ondelete="NO ACTION")
     )
-    lang: Mapped[str]
+    lang: Mapped[ArcaeaLanguage] = mapped_column(_ArcaeaLanguageEnumType)
     name: Mapped[Optional[str]]
     description: Mapped[Optional[str]]
 
@@ -91,7 +100,7 @@ class SongLocalized(ModelsV5Base, ReprHelper):
     id: Mapped[str] = mapped_column(
         ForeignKey(Song.id, onupdate="CASCADE", ondelete="NO ACTION")
     )
-    lang: Mapped[str]
+    lang: Mapped[ArcaeaLanguage] = mapped_column(_ArcaeaLanguageEnumType)
     title: Mapped[Optional[str]]
     source: Mapped[Optional[str]]
 
@@ -107,7 +116,7 @@ class SongSearchWord(ModelsV5Base, ReprHelper):
     id: Mapped[str] = mapped_column(
         ForeignKey(Song.id, onupdate="CASCADE", ondelete="NO ACTION")
     )
-    lang: Mapped[str]
+    lang: Mapped[ArcaeaLanguage] = mapped_column(_ArcaeaLanguageEnumType)
     type: Mapped[int] = mapped_column(comment="1: title, 2: artist")
     value: Mapped[str]
 
@@ -163,7 +172,7 @@ class DifficultyLocalized(ModelsV5Base, ReprHelper):
     rating_class: Mapped[ArcaeaRatingClass] = mapped_column(
         ForeignKey(Difficulty.rating_class, onupdate="CASCADE", ondelete="NO ACTION")
     )
-    lang: Mapped[str]
+    lang: Mapped[ArcaeaLanguage] = mapped_column(_ArcaeaLanguageEnumType)
     title: Mapped[Optional[str]]
     artist: Mapped[Optional[str]]
 
