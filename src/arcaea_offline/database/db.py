@@ -5,7 +5,6 @@ from typing import Iterable, Optional, Type, Union
 from sqlalchemy import Engine, func, inspect, select
 from sqlalchemy.orm import DeclarativeBase, InstrumentedAttribute, sessionmaker
 
-from arcaea_offline.external.arcsong.arcsong_json import ArcSongJsonBuilder
 from arcaea_offline.singleton import Singleton
 
 from .models.v4.config import ConfigBase, Property
@@ -401,13 +400,5 @@ class Database(metaclass=Singleton):
 
     def count_scores_best(self):
         return self.__count_table(ScoreBest)
-
-    # endregion
-
-    # region export
-    def generate_arcsong(self):
-        with self.sessionmaker() as session:
-            arcsong = ArcSongJsonBuilder(session).generate_arcsong_json()
-        return arcsong
 
     # endregion
