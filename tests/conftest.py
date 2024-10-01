@@ -14,7 +14,7 @@ def db_conn():
     conn.close()
 
 
-@pytest.fixture()
+@pytest.fixture
 def db_session(db_conn):
     session = Session(bind=db_conn)
     yield session

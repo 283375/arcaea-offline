@@ -1,4 +1,4 @@
-from typing import Any, Literal, overload
+from typing import Any, Dict, Literal, overload
 
 from arcaea_offline.constants.enums import (
     ArcaeaPlayResultClearType,
@@ -10,8 +10,8 @@ from arcaea_offline.constants.play_result import ScoreLowerLimits
 class PlayResultFormatter:
     SCORE_GRADE_FORMAT_RESULTS = Literal["EX+", "EX", "AA", "A", "B", "C", "D"]
 
-    @staticmethod
-    def score_grade(score: int) -> SCORE_GRADE_FORMAT_RESULTS:
+    @classmethod
+    def score_grade(cls, score: int) -> SCORE_GRADE_FORMAT_RESULTS:
         """
         Returns the score grade, e.g. EX+.
 
@@ -20,22 +20,20 @@ class PlayResultFormatter:
         if not isinstance(score, int):
             raise TypeError(f"Unsupported type {type(score)}, cannot format")
 
-        if score >= ScoreLowerLimits.EX_PLUS:
-            return "EX+"
-        elif score >= ScoreLowerLimits.EX:
-            return "EX"
-        elif score >= ScoreLowerLimits.AA:
-            return "AA"
-        elif score >= ScoreLowerLimits.A:
-            return "A"
-        elif score >= ScoreLowerLimits.B:
-            return "B"
-        elif score >= ScoreLowerLimits.C:
-            return "C"
-        elif score >= ScoreLowerLimits.D:
-            return "D"
-        else:
+        if score < 0:
             raise ValueError("score cannot be negative")
+
+        score_grades: Dict[int, Literal["EX+", "EX", "AA", "A", "B", "C", "D"]] = {
+            ScoreLowerLimits.EX_PLUS: "EX+",
+            ScoreLowerLimits.EX: "EX",
+            ScoreLowerLimits.AA: "AA",
+            ScoreLowerLimits.A: "A",
+            ScoreLowerLimits.B: "B",
+            ScoreLowerLimits.C: "C",
+            ScoreLowerLimits.D: "D",
+        }
+
+        return next(value for limit, value in score_grades.items() if score >= limit)
 
     CLEAR_TYPE_FORMAT_RESULTS = Literal[
         "TRACK LOST",
@@ -56,7 +54,6 @@ class PlayResultFormatter:
         """
         Returns the uppercased clear type name, e.g. NORMAL CLEAR.
         """
-        ...
 
     @overload
     @classmethod
@@ -69,7 +66,6 @@ class PlayResultFormatter:
 
         Raises `ValueError` if the integer is negative.
         """
-        ...
 
     @overload
     @classmethod
@@ -77,7 +73,6 @@ class PlayResultFormatter:
         """
         Returns "None"
         """
-        ...
 
     @classmethod
     def clear_type(cls, clear_type: Any) -> CLEAR_TYPE_FORMAT_RESULTS:
@@ -103,7 +98,6 @@ class PlayResultFormatter:
         """
         Returns the uppercased clear type name, e.g. NORMAL CLEAR.
         """
-        ...
 
     @overload
     @classmethod
@@ -116,7 +110,6 @@ class PlayResultFormatter:
 
         Raises `ValueError` if the integer is negative.
         """
-        ...
 
     @overload
     @classmethod
@@ -124,7 +117,6 @@ class PlayResultFormatter:
         """
         Returns "None"
         """
-        ...
 
     @classmethod
     def modifier(cls, modifier: Any) -> MODIFIER_FORMAT_RESULTS:

@@ -105,9 +105,9 @@ class ScoreCalculated(ScoresViewBase):
             Score.modifier,
             Score.clear_type,
             case(
-                (Score.score >= 10000000, ChartInfo.constant / 10.0 + 2),
+                (Score.score >= 10000000, ChartInfo.constant / 10.0 + 2),  # noqa: PLR2004
                 (
-                    Score.score >= 9800000,
+                    Score.score >= 9800000,  # noqa: PLR2004
                     ChartInfo.constant / 10.0 + 1 + (Score.score - 9800000) / 200000.0,
                 ),
                 else_=func.max(

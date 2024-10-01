@@ -75,7 +75,7 @@ class Database(metaclass=Singleton):
 
     # region init
 
-    def init(self, checkfirst: bool = True):
+    def init(self, *, checkfirst: bool = True):
         # create tables & views
         if checkfirst:
             # > https://github.com/kvesteri/sqlalchemy-utils/issues/396
@@ -320,7 +320,7 @@ class Database(metaclass=Singleton):
             for constant in range(base_constant - 20, base_constant + 1):
                 # from Pure Memory(EX+) to AA
                 score_modifier = (play_result * 10 - constant) / 10
-                if score_modifier >= 2.0:
+                if score_modifier >= 2.0:  # noqa: PLR2004
                     min_score = 10000000
                 elif score_modifier >= 1.0:
                     min_score = 200000 * (score_modifier - 1) + 9800000
@@ -383,7 +383,7 @@ class Database(metaclass=Singleton):
         stmt = (
             select(func.count())
             .select_from(ChartInfo)
-            .where((ChartInfo.constant != None) & (ChartInfo.notes != None))
+            .where((ChartInfo.constant != None) & (ChartInfo.notes != None))  # noqa: E711
         )
         with self.sessionmaker() as session:
             result = session.scalar(stmt)

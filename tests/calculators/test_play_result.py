@@ -21,7 +21,8 @@ class TestPlayResultCalculators:
             Decimal("-0.00")
         ) == Decimal("-31.67")
 
-        pytest.raises(ValueError, PlayResultCalculators.score_modifier, -1)
+        with pytest.raises(ValueError, match="negative"):
+            PlayResultCalculators.score_modifier(-1)
 
         pytest.raises(TypeError, PlayResultCalculators.score_modifier, "9800000")
         pytest.raises(TypeError, PlayResultCalculators.score_modifier, None)
@@ -38,5 +39,8 @@ class TestPlayResultCalculators:
 
         pytest.raises(TypeError, PlayResultCalculators.play_rating, 10002221, None)
 
-        pytest.raises(ValueError, PlayResultCalculators.play_rating, -1, 120)
-        pytest.raises(ValueError, PlayResultCalculators.play_rating, 10002221, -1)
+        with pytest.raises(ValueError, match="negative"):
+            PlayResultCalculators.play_rating(-1, 120)
+
+        with pytest.raises(ValueError, match="negative"):
+            PlayResultCalculators.play_rating(10002221, -1)

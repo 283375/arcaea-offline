@@ -21,7 +21,7 @@ def _difficulty(**kw):
     return Difficulty(**defaults)
 
 
-class Test_Chart:
+class TestChart:
     def init_db(self, session):
         SongsBase.metadata.create_all(session.bind, checkfirst=False)
         SongsViewBase.metadata.create_all(session.bind, checkfirst=False)

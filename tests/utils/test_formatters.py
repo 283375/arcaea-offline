@@ -73,7 +73,9 @@ class TestPlayResultFormatter:
         assert PlayResultFormatter.score_grade(5500000) == "D"
         assert PlayResultFormatter.score_grade(0) == "D"
 
-        pytest.raises(ValueError, PlayResultFormatter.score_grade, -1)
+        with pytest.raises(ValueError, match="negative"):
+            PlayResultFormatter.score_grade(-1)
+
         pytest.raises(TypeError, PlayResultFormatter.score_grade, "10001284")
         pytest.raises(TypeError, PlayResultFormatter.score_grade, [])
         pytest.raises(TypeError, PlayResultFormatter.score_grade, None)
@@ -108,7 +110,9 @@ class TestPlayResultFormatter:
         assert PlayResultFormatter.clear_type(1) == "NORMAL CLEAR"
         assert PlayResultFormatter.clear_type(6) == "UNKNOWN"
 
-        pytest.raises(ValueError, PlayResultFormatter.clear_type, -1)
+        with pytest.raises(ValueError, match="negative"):
+            PlayResultFormatter.clear_type(-1)
+
         pytest.raises(TypeError, PlayResultFormatter.clear_type, "1")
         pytest.raises(TypeError, PlayResultFormatter.clear_type, [])
 
@@ -121,6 +125,8 @@ class TestPlayResultFormatter:
         assert PlayResultFormatter.modifier(1) == "EASY"
         assert PlayResultFormatter.modifier(6) == "UNKNOWN"
 
-        pytest.raises(ValueError, PlayResultFormatter.modifier, -1)
+        with pytest.raises(ValueError, match="negative"):
+            PlayResultFormatter.modifier(-1)
+
         pytest.raises(TypeError, PlayResultFormatter.modifier, "1")
         pytest.raises(TypeError, PlayResultFormatter.modifier, [])

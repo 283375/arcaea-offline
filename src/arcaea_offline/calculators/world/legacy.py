@@ -5,6 +5,13 @@ from ._common import StepBooster
 
 
 class LegacyMapStepBooster(StepBooster):
+    __fragment_boost_multipliers = {
+        None: Decimal("1.0"),
+        100: Decimal("1.1"),
+        250: Decimal("1.25"),
+        500: Decimal("1.5"),
+    }
+
     def __init__(
         self,
         stamina: Literal[2, 4, 6],
@@ -35,11 +42,5 @@ class LegacyMapStepBooster(StepBooster):
 
     def final_value(self) -> Decimal:
         stamina_multiplier = Decimal(self.stamina)
-        fragments_multiplier = Decimal(1)
-        if self.fragments == 100:
-            fragments_multiplier = Decimal("1.1")
-        elif self.fragments == 250:
-            fragments_multiplier = Decimal("1.25")
-        elif self.fragments == 500:
-            fragments_multiplier = Decimal("1.5")
+        fragments_multiplier = self.__fragment_boost_multipliers[self.fragments]
         return stamina_multiplier * fragments_multiplier
