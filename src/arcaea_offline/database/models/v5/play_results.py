@@ -147,7 +147,7 @@ class PlayResultBest(ModelsV5ViewBase, ReprHelper):
 
     id: Mapped[int]
     song_id: Mapped[str]
-    rating_class: Mapped[int]
+    rating_class: Mapped[ArcaeaRatingClass]
     score: Mapped[int]
     pure: Mapped[Optional[int]]
     shiny_pure: Mapped[Optional[int]]
