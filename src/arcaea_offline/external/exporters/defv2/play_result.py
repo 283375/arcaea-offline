@@ -1,6 +1,6 @@
 from typing import List
 
-from arcaea_offline.database.models.v5 import PlayResult
+from arcaea_offline.database.models import PlayResult
 
 from .definitions import (
     ArcaeaOfflineDEFv2PlayResultItem,

@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from arcaea_offline.constants.enums.arcaea import ArcaeaLanguage
-from arcaea_offline.database.models.v5 import Difficulty, Pack, Song
+from arcaea_offline.database.models import Difficulty, Pack, Song
 
 from .definitions import ArcsongJsonDifficultyItem, ArcsongJsonRoot, ArcsongJsonSongItem
 

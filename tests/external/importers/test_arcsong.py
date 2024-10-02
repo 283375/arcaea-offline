@@ -2,7 +2,7 @@ import sqlite3
 
 import tests.resources
 from arcaea_offline.constants.enums.arcaea import ArcaeaRatingClass
-from arcaea_offline.database.models.v5 import ChartInfo
+from arcaea_offline.database.models import ChartInfo
 from arcaea_offline.external.importers.arcsong import (
     ArcsongDatabaseImporter,
 )

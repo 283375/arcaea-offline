@@ -5,7 +5,7 @@ Pack <> PackLocalized
 """
 
 from arcaea_offline.constants.enums import ArcaeaLanguage
-from arcaea_offline.database.models.v5 import ModelsV5Base, Pack, PackLocalized
+from arcaea_offline.database.models import ModelsV5Base, Pack, PackLocalized
 
 
 class TestPackRelationships:

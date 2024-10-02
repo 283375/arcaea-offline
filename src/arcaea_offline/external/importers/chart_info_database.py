@@ -3,7 +3,7 @@ from contextlib import closing
 from typing import List, overload
 
 from arcaea_offline.constants.enums.arcaea import ArcaeaRatingClass
-from arcaea_offline.database.models.v5 import ChartInfo
+from arcaea_offline.database.models import ChartInfo
 
 
 class ChartInfoDatabaseParser:

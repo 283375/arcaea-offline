@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 
 from sqlalchemy import Enum, ForeignKey, and_, func, select
@@ -72,7 +73,7 @@ class Song(ModelsV5Base, ReprHelper):
     audio_preview_end: Mapped[Optional[int]]
     side: Mapped[Optional[ArcaeaSongSide]]
     version: Mapped[Optional[str]]
-    date: Mapped[Optional[int]]
+    date: Mapped[Optional[datetime]]
     bg: Mapped[Optional[str]]
     bg_inverse: Mapped[Optional[str]]
     bg_day: Mapped[Optional[str]]
@@ -143,7 +144,7 @@ class Difficulty(ModelsV5Base, ReprHelper):
     bpm: Mapped[Optional[str]]
     bpm_base: Mapped[Optional[float]]
     version: Mapped[Optional[str]]
-    date: Mapped[Optional[int]]
+    date: Mapped[Optional[datetime]]
 
     song: Mapped[Song] = relationship(back_populates="difficulties", viewonly=True)
     chart_info: Mapped[Optional["ChartInfo"]] = relationship(
@@ -225,7 +226,7 @@ class Chart(ModelsV5ViewBase, ReprHelper):
     audio_preview_end: Mapped[Optional[int]]
     side: Mapped[Optional[int]]
     version: Mapped[Optional[str]]
-    date: Mapped[Optional[int]]
+    date: Mapped[Optional[datetime]]
     bg: Mapped[Optional[str]]
     bg_inverse: Mapped[Optional[str]]
     bg_day: Mapped[Optional[str]]

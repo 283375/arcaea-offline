@@ -4,7 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from arcaea_offline.constants.enums.arcaea import ArcaeaRatingClass
-from arcaea_offline.database.models.v5 import (
+from arcaea_offline.database.models import (
     ChartInfo,
     Difficulty,
     PlayResultBest,

@@ -8,7 +8,7 @@ from arcaea_offline.constants.enums import (
     ArcaeaPlayResultModifier,
     ArcaeaRatingClass,
 )
-from arcaea_offline.database.models.v5 import PlayResult
+from arcaea_offline.database.models import PlayResult
 
 from .common import fix_timestamp
 

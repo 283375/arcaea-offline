@@ -1,7 +1,32 @@
-# pylint: disable=too-few-public-methods
+from datetime import datetime
 
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm.exc import DetachedInstanceError
+
+from arcaea_offline.constants.enums import (
+    ArcaeaPlayResultClearType,
+    ArcaeaPlayResultModifier,
+    ArcaeaRatingClass,
+    ArcaeaSongSide,
+)
+
+from ._custom_types import DbIntEnum, TZDateTime
+
+TYPE_ANNOTATION_MAP = {
+    datetime: TZDateTime,
+    ArcaeaRatingClass: DbIntEnum(ArcaeaRatingClass),
+    ArcaeaSongSide: DbIntEnum(ArcaeaSongSide),
+    ArcaeaPlayResultClearType: DbIntEnum(ArcaeaPlayResultClearType),
+    ArcaeaPlayResultModifier: DbIntEnum(ArcaeaPlayResultModifier),
+}
+
+
+class ModelsV5Base(DeclarativeBase):
+    type_annotation_map = TYPE_ANNOTATION_MAP
+
+
+class ModelsV5ViewBase(DeclarativeBase):
+    type_annotation_map = TYPE_ANNOTATION_MAP
 
 
 class ReprHelper:
@@ -24,8 +49,9 @@ class ReprHelper:
                 field_strings.append(f"{key}=DetachedInstanceError")
             else:
                 at_least_one_attached_attribute = True
+
         if at_least_one_attached_attribute:
-            return f"<{self.__class__.__name__}({','.join(field_strings)})>"
+            return f"<{self.__class__.__name__}({', '.join(field_strings)})>"
         return f"<{self.__class__.__name__} {id(self)}>"
 
     def __repr__(self):

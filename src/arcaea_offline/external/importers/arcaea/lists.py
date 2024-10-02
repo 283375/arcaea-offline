@@ -10,7 +10,7 @@ from arcaea_offline.constants.enums import (
     ArcaeaRatingClass,
     ArcaeaSongSide,
 )
-from arcaea_offline.database.models.v5 import (
+from arcaea_offline.database.models import (
     Difficulty,
     DifficultyLocalized,
     Pack,

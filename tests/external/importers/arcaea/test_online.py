@@ -6,7 +6,7 @@ from arcaea_offline.constants.enums.arcaea import (
     ArcaeaPlayResultModifier,
     ArcaeaRatingClass,
 )
-from arcaea_offline.database.models.v5.play_results import PlayResult
+from arcaea_offline.database.models.play_results import PlayResult
 from arcaea_offline.external.importers.arcaea.online import ArcaeaOnlineApiParser
 
 API_RESULT = {
