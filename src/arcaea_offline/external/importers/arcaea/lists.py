@@ -49,7 +49,7 @@ class ArcaeaPacklistParser(ArcaeaListParser):
 
                 if name_localized or description_localized:
                     pack_localized = PackLocalized(id=pack.id)
-                    pack_localized.lang = key.value
+                    pack_localized.lang = ArcaeaLanguage(key.value)
                     pack_localized.name = name_localized
                     pack_localized.description = description_localized
                     results.append(pack_localized)
@@ -96,7 +96,7 @@ class ArcaeaSonglistParser(ArcaeaListParser):
 
                 if title_localized or source_localized:
                     song_localized = SongLocalized(id=song.id)
-                    song_localized.lang = lang.value
+                    song_localized.lang = ArcaeaLanguage(lang.value)
                     song_localized.title = title_localized
                     song_localized.source = source_localized
                     results.append(song_localized)
@@ -167,7 +167,7 @@ class ArcaeaSonglistParser(ArcaeaListParser):
                             song_id=difficulty.song_id,
                             rating_class=difficulty.rating_class,
                         )
-                        difficulty_localized.lang = lang.value
+                        difficulty_localized.lang = ArcaeaLanguage(lang.value)
                         difficulty_localized.title = title_localized
                         difficulty_localized.artist = artist_localized
                         results.append(difficulty_localized)

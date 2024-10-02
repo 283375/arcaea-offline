@@ -38,6 +38,13 @@ class ArcsongJsonExporter:
         else:
             name_jp = ""
 
+        if difficulty.date is not None:
+            date = int(difficulty.date.timestamp())
+        elif song.date is not None:
+            date = int(song.date.timestamp())
+        else:
+            date = 0
+
         return {
             "name_en": difficulty.title or song.title,
             "name_jp": name_jp,
@@ -53,7 +60,7 @@ class ArcsongJsonExporter:
             "world_unlock": False,
             "remote_download": False,
             "bg": difficulty.bg or song.bg or "",
-            "date": difficulty.date or song.date or 0,
+            "date": date,
             "version": difficulty.version or song.version or "",
             "difficulty": difficulty.rating * 2 + int(difficulty.rating_plus),
             "rating": chart_info.constant or 0 if chart_info else 0,

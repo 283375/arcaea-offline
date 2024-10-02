@@ -12,25 +12,27 @@ class ArcaeaOfflineDEFv2PlayResultExporter:
     def export(self, items: List[PlayResult]) -> ArcaeaOfflineDEFv2PlayResultRoot:
         export_items = []
         for item in items:
-            export_item: ArcaeaOfflineDEFv2PlayResultItem = {}
+            export_item: ArcaeaOfflineDEFv2PlayResultItem = {
+                "id": item.id,
+                "songId": item.song_id,
+                "ratingClass": item.rating_class.value,
+                "score": item.score,
+                "pure": item.pure,
+                "far": item.far,
+                "lost": item.lost,
+                "date": int(item.date.timestamp() * 1000) if item.date else 0,
+                "maxRecall": item.max_recall,
+                "modifier": (
+                    item.modifier.value if item.modifier is not None else None
+                ),
+                "clearType": (
+                    item.clear_type.value if item.clear_type is not None else None
+                ),
+                "source": "https://arcaeaoffline.sevive.xyz/python",
+                "comment": item.comment,
+            }
 
-            export_item["id"] = item.id
-            export_item["songId"] = item.song_id
-            export_item["ratingClass"] = item.rating_class.value
-            export_item["score"] = item.score
-            export_item["pure"] = item.pure
-            export_item["far"] = item.far
-            export_item["lost"] = item.lost
-            export_item["date"] = item.date
-            export_item["maxRecall"] = item.max_recall
-            export_item["modifier"] = (
-                item.modifier.value if item.modifier is not None else None
-            )
-            export_item["clearType"] = (
-                item.clear_type.value if item.clear_type is not None else None
-            )
-            export_item["source"] = "https://arcaeaoffline.sevive.xyz/python"
-            export_item["comment"] = item.comment
+            export_items.append(export_item)
 
         return {
             "$schema": "https://arcaeaoffline.sevive.xyz/schemas/def/v2/score.schema.json",
