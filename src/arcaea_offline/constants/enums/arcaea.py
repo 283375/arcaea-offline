@@ -13,6 +13,7 @@ class ArcaeaSongSide(IntEnum):
     LIGHT = 0
     CONFLICT = 1
     COLORLESS = 2
+    LEPHON = 3
 
 
 class ArcaeaPlayResultModifier(IntEnum):
