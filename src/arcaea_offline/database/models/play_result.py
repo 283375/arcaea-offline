@@ -1,18 +1,14 @@
 from datetime import datetime, timezone
 from typing import Optional
+from uuid import UUID, uuid4
 
-from sqlalchemy import ForeignKey, and_, case, func, inspect, select, text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, Text, Uuid, case, func, inspect, select, text
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy_utils import create_view
 
-from arcaea_offline.constants.enums import (
-    ArcaeaPlayResultClearType,
-    ArcaeaPlayResultModifier,
-    ArcaeaRatingClass,
-)
-
-from .arcaea import ChartInfo, Difficulty
-from .base import ModelsV5Base, ModelsV5ViewBase, ReprHelper
+from ._base import ModelBase, ModelViewBase, ReprHelper
+from .chart_info import ChartInfo
+from .difficulty import Difficulty
 
 __all__ = [
     "CalculatedPotential",
@@ -22,59 +18,53 @@ __all__ = [
 ]
 
 
-class PlayResult(ModelsV5Base, ReprHelper):
-    __tablename__ = "play_results"
+class PlayResult(ModelBase, ReprHelper):
+    __tablename__ = "play_result"
 
     id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
-    song_id: Mapped[str] = mapped_column(
-        ForeignKey(Difficulty.song_id, onupdate="CASCADE", ondelete="NO ACTION"),
-        index=True,
+    uuid: Mapped[UUID] = mapped_column(
+        Uuid, nullable=False, unique=True, default=lambda: uuid4()
     )
-    rating_class: Mapped[ArcaeaRatingClass] = mapped_column(
-        ForeignKey(Difficulty.rating_class, onupdate="CASCADE", ondelete="NO ACTION"),
-        index=True,
+    song_id: Mapped[str] = mapped_column(String)
+    rating_class: Mapped[int] = mapped_column(Integer)
+    played_at: Mapped[Optional[datetime]] = mapped_column(
+        default=lambda: datetime.now(timezone.utc)
     )
     score: Mapped[int]
     pure: Mapped[Optional[int]]
+    pure_early: Mapped[Optional[int]]
+    pure_late: Mapped[Optional[int]]
     far: Mapped[Optional[int]]
+    far_early: Mapped[Optional[int]]
+    far_late: Mapped[Optional[int]]
     lost: Mapped[Optional[int]]
-    date: Mapped[Optional[datetime]] = mapped_column(
-        default=lambda: datetime.now(timezone.utc)
-    )
+
     max_recall: Mapped[Optional[int]]
-    modifier: Mapped[Optional[ArcaeaPlayResultModifier]]
-    clear_type: Mapped[Optional[ArcaeaPlayResultClearType]]
-    comment: Mapped[Optional[str]]
-
-    difficulty: Mapped[Difficulty] = relationship(
-        primaryjoin=and_(
-            song_id == Difficulty.song_id,
-            rating_class == Difficulty.rating_class,
-        ),
-        viewonly=True,
-    )
+    clear_type: Mapped[Optional[int]]
+    modifier: Mapped[Optional[int]]
+    comment: Mapped[Optional[str]] = mapped_column(Text)
 
 
-# How to create an SQL View with SQLAlchemy?
-# https://stackoverflow.com/a/53253105/16484891
-# CC BY-SA 4.0
-
-
-class PlayResultCalculated(ModelsV5ViewBase, ReprHelper):
+class PlayResultCalculated(ModelViewBase, ReprHelper):
     __tablename__ = "play_results_calculated"
 
     id: Mapped[int]
+    uuid: Mapped[UUID]
     song_id: Mapped[str]
-    rating_class: Mapped[ArcaeaRatingClass]
+    rating_class: Mapped[int]
     score: Mapped[int]
     pure: Mapped[Optional[int]]
+    pure_early: Mapped[Optional[int]]
+    pure_late: Mapped[Optional[int]]
     shiny_pure: Mapped[Optional[int]]
     far: Mapped[Optional[int]]
+    far_early: Mapped[Optional[int]]
+    far_late: Mapped[Optional[int]]
     lost: Mapped[Optional[int]]
-    date: Mapped[Optional[datetime]]
+    played_at: Mapped[Optional[datetime]]
     max_recall: Mapped[Optional[int]]
-    modifier: Mapped[Optional[ArcaeaPlayResultModifier]]
-    clear_type: Mapped[Optional[ArcaeaPlayResultClearType]]
+    modifier: Mapped[Optional[int]]
+    clear_type: Mapped[Optional[int]]
     potential: Mapped[float]
     comment: Mapped[Optional[str]]
 
@@ -106,7 +96,7 @@ class PlayResultCalculated(ModelsV5ViewBase, ReprHelper):
             ).label("shiny_pure"),
             PlayResult.far,
             PlayResult.lost,
-            PlayResult.date,
+            PlayResult.played_at,
             PlayResult.max_recall,
             PlayResult.modifier,
             PlayResult.clear_type,
@@ -137,26 +127,31 @@ class PlayResultCalculated(ModelsV5ViewBase, ReprHelper):
             (Difficulty.song_id == PlayResult.song_id)
             & (Difficulty.rating_class == PlayResult.rating_class),
         ),
-        metadata=ModelsV5ViewBase.metadata,
+        metadata=ModelViewBase.metadata,
         cascade_on_drop=False,
     )
 
 
-class PlayResultBest(ModelsV5ViewBase, ReprHelper):
+class PlayResultBest(ModelViewBase, ReprHelper):
     __tablename__ = "play_results_best"
 
     id: Mapped[int]
+    uuid: Mapped[UUID]
     song_id: Mapped[str]
-    rating_class: Mapped[ArcaeaRatingClass]
+    rating_class: Mapped[int]
     score: Mapped[int]
     pure: Mapped[Optional[int]]
+    pure_early: Mapped[Optional[int]]
+    pure_late: Mapped[Optional[int]]
     shiny_pure: Mapped[Optional[int]]
     far: Mapped[Optional[int]]
+    far_early: Mapped[Optional[int]]
+    far_late: Mapped[Optional[int]]
     lost: Mapped[Optional[int]]
-    date: Mapped[Optional[datetime]]
+    played_at: Mapped[Optional[datetime]]
     max_recall: Mapped[Optional[int]]
-    modifier: Mapped[Optional[ArcaeaPlayResultModifier]]
-    clear_type: Mapped[Optional[ArcaeaPlayResultClearType]]
+    modifier: Mapped[Optional[int]]
+    clear_type: Mapped[Optional[int]]
     potential: Mapped[float]
     comment: Mapped[Optional[str]]
 
@@ -173,12 +168,12 @@ class PlayResultBest(ModelsV5ViewBase, ReprHelper):
         .select_from(PlayResultCalculated)
         .group_by(PlayResultCalculated.song_id, PlayResultCalculated.rating_class)
         .order_by(PlayResultCalculated.potential.desc()),
-        metadata=ModelsV5ViewBase.metadata,
+        metadata=ModelViewBase.metadata,
         cascade_on_drop=False,
     )
 
 
-class CalculatedPotential(ModelsV5ViewBase, ReprHelper):
+class CalculatedPotential(ModelViewBase, ReprHelper):
     __tablename__ = "calculated_potential"
 
     b30: Mapped[float]
@@ -192,6 +187,6 @@ class CalculatedPotential(ModelsV5ViewBase, ReprHelper):
     __table__ = create_view(
         name=__tablename__,
         selectable=select(func.avg(_select_bests_subquery.c.b30_sum).label("b30")),
-        metadata=ModelsV5ViewBase.metadata,
+        metadata=ModelViewBase.metadata,
         cascade_on_drop=False,
     )

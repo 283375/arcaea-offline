@@ -1,31 +1,30 @@
 from datetime import datetime
 
+from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm.exc import DetachedInstanceError
 
-from arcaea_offline.constants.enums import (
-    ArcaeaPlayResultClearType,
-    ArcaeaPlayResultModifier,
-    ArcaeaRatingClass,
-    ArcaeaSongSide,
-)
-
-from ._custom_types import DbIntEnum, TZDateTime
+from ._types import ForceTimezoneDateTime
 
 TYPE_ANNOTATION_MAP = {
-    datetime: TZDateTime,
-    ArcaeaRatingClass: DbIntEnum(ArcaeaRatingClass),
-    ArcaeaSongSide: DbIntEnum(ArcaeaSongSide),
-    ArcaeaPlayResultClearType: DbIntEnum(ArcaeaPlayResultClearType),
-    ArcaeaPlayResultModifier: DbIntEnum(ArcaeaPlayResultModifier),
+    datetime: ForceTimezoneDateTime,
 }
 
 
-class ModelsV5Base(DeclarativeBase):
+class ModelBase(DeclarativeBase):
     type_annotation_map = TYPE_ANNOTATION_MAP
+    metadata = MetaData(
+        naming_convention={
+            "ix": "ix_%(column_0_label)s",
+            "uq": "uq_%(table_name)s_%(column_0_name)s",
+            "ck": "ck_%(table_name)s_`%(constraint_name)s`",
+            "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+            "pk": "pk_%(table_name)s",
+        }
+    )
 
 
-class ModelsV5ViewBase(DeclarativeBase):
+class ModelViewBase(DeclarativeBase):
     type_annotation_map = TYPE_ANNOTATION_MAP
 
 
@@ -34,7 +33,7 @@ class ReprHelper:
 
     def _repr(self, **kwargs) -> str:
         """
-        Helper for __repr__
+        SQLAlchemy model __repr__ helper
 
         https://stackoverflow.com/a/55749579/16484891
 
