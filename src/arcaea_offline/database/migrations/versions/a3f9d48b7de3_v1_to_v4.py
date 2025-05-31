@@ -1,4 +1,4 @@
-"""v4
+"""v1 to v4
 
 Revision ID: a3f9d48b7de3
 Revises:
@@ -249,39 +249,22 @@ def upgrade(
             rows_to_insert = []
 
             for row in rows:
-                id_ = row[0]
-                song_id = row[1]
-                rating_class = row[2]
-                score = row[3]
-                time = datetime.fromtimestamp(row[4]).astimezone(tz=timezone.utc)
-                pure = row[5]
-                far = row[6]
-                lost = row[7]
-                max_recall = row[8]
-                clear_type = row[9]
-
-                if threshold_date is not None and time <= threshold_date:
-                    time = None
-
-                rows_to_insert.append(
-                    {
-                        "id": id_,
-                        "song_id": song_id,
-                        "rating_class": rating_class,
-                        "score": score,
-                        "date": time,
-                        "pure": pure,
-                        "far": far,
-                        "lost": lost,
-                        "max_recall": max_recall,
-                        "clear_type": clear_type,
-                        "modifier": None,
-                        "comment": None,
-                    }
+                result = row._asdict()
+                result["date"] = datetime.fromtimestamp(
+                    result.pop("time"), tz=timezone.utc
                 )
 
+                if threshold_date is not None and result["date"] <= threshold_date:
+                    result["date"] = None
+
+                result["date"] = (
+                    int(result["date"].timestamp())
+                    if result["date"] is not None
+                    else None
+                )
+                rows_to_insert.append(result)
+
             conn.execute(sa.insert(scores_tbl), rows_to_insert)
-            conn.commit()
 
     op.drop_table("scores_old")
 
