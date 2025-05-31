@@ -100,19 +100,18 @@ class ArcaeaSt3Parser:
             else:
                 date = None
 
-            entities.append(
-                PlayResult(
-                    song_id=song_id,
-                    rating_class=rating_class_enum,
-                    score=score,
-                    pure=pure,
-                    far=far,
-                    lost=lost,
-                    date=date,
-                    modifier=modifier_enum,
-                    clear_type=clear_type_enum,
-                    comment=import_comment,
-                )
-            )
+            play_result = PlayResult()
+            play_result.song_id = song_id
+            play_result.rating_class = rating_class_enum
+            play_result.score = score
+            play_result.pure = pure
+            play_result.far = far
+            play_result.lost = lost
+            play_result.played_at = date
+            play_result.modifier = modifier_enum
+            play_result.clear_type = clear_type_enum
+            play_result.comment = import_comment
+
+            entities.append(play_result)
 
         return entities

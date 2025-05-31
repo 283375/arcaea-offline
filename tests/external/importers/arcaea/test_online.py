@@ -6,7 +6,7 @@ from arcaea_offline.constants.enums.arcaea import (
     ArcaeaPlayResultModifier,
     ArcaeaRatingClass,
 )
-from arcaea_offline.database.models.play_results import PlayResult
+from arcaea_offline.database.models.play_result import PlayResult
 from arcaea_offline.external.importers.arcaea.online import ArcaeaOnlineApiParser
 
 API_RESULT = {
@@ -80,9 +80,9 @@ class TestArcaeaOnlineApiParser:
         assert test1.pure == 1234
         assert test1.far == 12
         assert test1.lost == 4
-        assert test1.date == datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+        assert test1.played_at == datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
         assert test1.clear_type is ArcaeaPlayResultClearType.NORMAL_CLEAR
         assert test1.modifier is ArcaeaPlayResultModifier.NORMAL
 
         test2 = next(filter(lambda x: x.song_id == "test2", play_results))
-        assert test2.date == datetime(2024, 1, 2, 0, 0, 0, tzinfo=timezone.utc)
+        assert test2.played_at == datetime(2024, 1, 2, 0, 0, 0, tzinfo=timezone.utc)

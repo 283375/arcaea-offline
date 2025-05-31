@@ -85,7 +85,7 @@ class ArcaeaOnlineApiParser:
             play_result.pure = item["perfect_count"]
             play_result.far = item["near_count"]
             play_result.lost = item["miss_count"]
-            play_result.date = date
+            play_result.played_at = date
             play_result.modifier = ArcaeaPlayResultModifier(item["modifier"])
             play_result.clear_type = ArcaeaPlayResultClearType(item["clear_type"])
 

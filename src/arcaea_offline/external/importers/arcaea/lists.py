@@ -3,6 +3,7 @@ packlist and songlist parsers
 """
 
 import json
+from datetime import datetime, timezone
 from typing import List, Union
 
 from arcaea_offline.constants.enums import (
@@ -12,12 +13,11 @@ from arcaea_offline.constants.enums import (
 )
 from arcaea_offline.database.models import (
     Difficulty,
-    DifficultyLocalized,
+    DifficultyLocalization,
     Pack,
-    PackLocalized,
+    PackLocalization,
     Song,
-    SongLocalized,
-    SongSearchWord,
+    SongLocalization,
 )
 
 
@@ -27,11 +27,11 @@ class ArcaeaListParser:
 
 
 class ArcaeaPacklistParser(ArcaeaListParser):
-    def parse(self) -> List[Union[Pack, PackLocalized]]:
+    def parse(self) -> List[Union[Pack, PackLocalization]]:
         root = json.loads(self.list_text)
 
         packs = root["packs"]
-        results: List[Union[Pack, PackLocalized]] = [
+        results: List[Union[Pack, PackLocalization]] = [
             Pack(id="single", name="Memory Archive")
         ]
         for item in packs:
@@ -48,8 +48,8 @@ class ArcaeaPacklistParser(ArcaeaListParser):
                 )
 
                 if name_localized or description_localized:
-                    pack_localized = PackLocalized(id=pack.id)
-                    pack_localized.lang = ArcaeaLanguage(key.value)
+                    pack_localized = PackLocalization(id=pack.id)
+                    pack_localized.lang = key.value
                     pack_localized.name = name_localized
                     pack_localized.description = description_localized
                     results.append(pack_localized)
@@ -58,7 +58,7 @@ class ArcaeaPacklistParser(ArcaeaListParser):
 
 
 class ArcaeaSonglistParser(ArcaeaListParser):
-    def parse_songs(self) -> List[Union[Song, SongLocalized, SongSearchWord]]:
+    def parse_songs(self) -> List[Union[Song, SongLocalization]]:
         root = json.loads(self.list_text)
 
         songs = root["songs"]
@@ -72,11 +72,9 @@ class ArcaeaSonglistParser(ArcaeaListParser):
             song.bpm = item["bpm"]
             song.bpm_base = item["bpm_base"]
             song.pack_id = item["set"]
-            song.audio_preview = item["audioPreview"]
-            song.audio_preview_end = item["audioPreviewEnd"]
             song.side = ArcaeaSongSide(item["side"])
             song.version = item["version"]
-            song.date = item["date"]
+            song.added_at = datetime.fromtimestamp(item["date"], tz=timezone.utc)
             song.bg = item.get("bg")
             song.bg_inverse = item.get("bg_inverse")
             if item.get("bg_daynight"):
@@ -95,32 +93,32 @@ class ArcaeaSonglistParser(ArcaeaListParser):
                 )
 
                 if title_localized or source_localized:
-                    song_localized = SongLocalized(id=song.id)
-                    song_localized.lang = ArcaeaLanguage(lang.value)
+                    song_localized = SongLocalization(id=song.id)
+                    song_localized.lang = lang.value
                     song_localized.title = title_localized
                     song_localized.source = source_localized
                     results.append(song_localized)
 
-                # SongSearchTitle
-                search_titles = item.get("search_title", {}).get(lang.value, None)
-                if search_titles:
-                    for search_title in search_titles:
-                        song_search_word = SongSearchWord(
-                            id=song.id, lang=lang.value, type=1, value=search_title
-                        )
-                        results.append(song_search_word)
+                # TODO: SongSearchTitle?
+                # search_titles = item.get("search_title", {}).get(lang.value, None)
+                # if search_titles:
+                #     for search_title in search_titles:
+                #         song_search_word = SongSearchWord(
+                #             id=song.id, lang=lang.value, type=1, value=search_title
+                #         )
+                #         results.append(song_search_word)
 
-                search_artists = item.get("search_artist", {}).get(lang.value, None)
-                if search_artists:
-                    for search_artist in search_artists:
-                        song_search_word = SongSearchWord(
-                            id=song.id, lang=lang.value, type=2, value=search_artist
-                        )
-                        results.append(song_search_word)
+                # search_artists = item.get("search_artist", {}).get(lang.value, None)
+                # if search_artists:
+                #     for search_artist in search_artists:
+                #         song_search_word = SongSearchWord(
+                #             id=song.id, lang=lang.value, type=2, value=search_artist
+                #         )
+                #         results.append(song_search_word)
 
         return results
 
-    def parse_difficulties(self) -> List[Union[Difficulty, DifficultyLocalized]]:
+    def parse_difficulties(self) -> List[Union[Difficulty, DifficultyLocalization]]:
         root = json.loads(self.list_text)
 
         songs = root["songs"]
@@ -138,11 +136,11 @@ class ArcaeaSonglistParser(ArcaeaListParser):
                 difficulty.song_id = song["id"]
                 difficulty.rating_class = ArcaeaRatingClass(item["ratingClass"])
                 difficulty.rating = item["rating"]
-                difficulty.rating_plus = item.get("ratingPlus") or False
+                difficulty.is_rating_plus = item.get("ratingPlus") or False
                 difficulty.chart_designer = item["chartDesigner"]
-                difficulty.jacket_desginer = item.get("jacketDesigner") or None
-                difficulty.audio_override = item.get("audioOverride") or False
-                difficulty.jacket_override = item.get("jacketOverride") or False
+                difficulty.jacket_designer = item.get("jacketDesigner") or None
+                difficulty.has_overriding_audio = item.get("audioOverride") or False
+                difficulty.has_overriding_jacket = item.get("jacketOverride") or False
                 difficulty.jacket_night = item.get("jacketNight") or None
                 difficulty.title = item.get("title_localized", {}).get("en") or None
                 difficulty.artist = item.get("artist") or None
@@ -151,7 +149,11 @@ class ArcaeaSonglistParser(ArcaeaListParser):
                 difficulty.bpm = item.get("bpm") or None
                 difficulty.bpm_base = item.get("bpm_base") or None
                 difficulty.version = item.get("version") or None
-                difficulty.date = item.get("date") or None
+                difficulty.added_at = (
+                    datetime.fromtimestamp(item["date"], tz=timezone.utc)
+                    if item.get("date") is not None
+                    else None
+                )
                 results.append(difficulty)
 
                 for lang in ArcaeaLanguage:
@@ -163,11 +165,11 @@ class ArcaeaSonglistParser(ArcaeaListParser):
                     )
 
                     if title_localized or artist_localized:
-                        difficulty_localized = DifficultyLocalized(
+                        difficulty_localized = DifficultyLocalization(
                             song_id=difficulty.song_id,
                             rating_class=difficulty.rating_class,
                         )
-                        difficulty_localized.lang = ArcaeaLanguage(lang.value)
+                        difficulty_localized.lang = lang.value
                         difficulty_localized.title = title_localized
                         difficulty_localized.artist = artist_localized
                         results.append(difficulty_localized)

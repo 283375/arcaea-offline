@@ -6,13 +6,15 @@ Chart functionalities
 - Difficulty song info overriding
 """
 
+from datetime import datetime, timezone
+
 from arcaea_offline.constants.enums.arcaea import ArcaeaRatingClass
 from arcaea_offline.database.models import (
     Chart,
     ChartInfo,
     Difficulty,
-    ModelsV5Base,
-    ModelsV5ViewBase,
+    ModelBase,
+    ModelViewBase,
     Pack,
     Song,
 )
@@ -20,8 +22,8 @@ from arcaea_offline.database.models import (
 
 class TestChart:
     def init_db(self, session):
-        ModelsV5Base.metadata.create_all(session.bind)
-        ModelsV5ViewBase.metadata.create_all(session.bind)
+        ModelBase.metadata.create_all(session.bind)
+        ModelViewBase.metadata.create_all(session.bind)
 
     def test_basic(self, db_session):
         self.init_db(db_session)
@@ -37,20 +39,23 @@ class TestChart:
             title="~TEST~",
             artist="~test~",
             pack_id=pack_id,
+            added_at=datetime(2024, 7, 4, tzinfo=timezone.utc),
         )
         difficulty = Difficulty(
             song_id=song_id,
             rating_class=rating_class,
             rating=9,
-            rating_plus=True,
+            is_rating_plus=True,
         )
         chart_info = ChartInfo(
             song_id=song_id,
             rating_class=rating_class,
             constant=98,
             notes=980,
+            added_at=datetime(2024, 7, 12, tzinfo=timezone.utc),
         )
         db_session.add_all([pack, song, difficulty, chart_info])
+        db_session.commit()
 
         chart: Chart = (
             db_session.query(Chart)
@@ -64,7 +69,7 @@ class TestChart:
         assert chart.artist == song.artist
         assert chart.pack_id == song.pack_id
         assert chart.rating == difficulty.rating
-        assert chart.rating_plus == difficulty.rating_plus
+        assert chart.is_rating_plus == difficulty.is_rating_plus
         assert chart.constant == chart_info.constant
         assert chart.notes == chart_info.notes
 
@@ -82,12 +87,13 @@ class TestChart:
             title="~TEST~",
             artist="~test~",
             pack_id=pack_id,
+            added_at=datetime(2024, 7, 4, tzinfo=timezone.utc),
         )
         difficulty = Difficulty(
             song_id=song_id,
             rating_class=rating_class,
             rating=9,
-            rating_plus=True,
+            is_rating_plus=True,
             title="~TEST DIFF~",
             artist="~diff~",
         )
@@ -96,8 +102,10 @@ class TestChart:
             rating_class=rating_class,
             constant=98,
             notes=980,
+            added_at=datetime(2024, 7, 12, tzinfo=timezone.utc),
         )
         db_session.add_all([pack, song, difficulty, chart_info])
+        db_session.commit()
 
         chart: Chart = (
             db_session.query(Chart)

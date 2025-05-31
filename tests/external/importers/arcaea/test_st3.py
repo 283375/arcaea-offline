@@ -31,7 +31,7 @@ class TestArcaeaSt3Parser:
         assert test1.pure == 895
         assert test1.far == 32
         assert test1.lost == 22
-        assert test1.date == datetime.fromtimestamp(1722100000).astimezone()
+        assert test1.played_at == datetime.fromtimestamp(1722100000).astimezone()
         assert test1.clear_type is ArcaeaPlayResultClearType.TRACK_LOST
         assert test1.modifier is ArcaeaPlayResultModifier.HARD
 
@@ -48,7 +48,7 @@ class TestArcaeaSt3Parser:
         assert corrupt2.modifier is None
 
         date1 = next(filter(lambda x: x.song_id == "date1", play_results))
-        assert date1.date is None
+        assert date1.played_at is None
 
     def test_invalid_input(self):
         pytest.raises(TypeError, ArcaeaSt3Parser.parse, "abcdefghijklmn")
