@@ -90,3 +90,4 @@ class DifficultyLocalization(ModelBase, ReprHelper):
 
     lang: Mapped[str] = mapped_column(String, primary_key=True)
     title: Mapped[Optional[str]] = mapped_column(String)
+    artist: Mapped[Optional[str]] = mapped_column(String)
