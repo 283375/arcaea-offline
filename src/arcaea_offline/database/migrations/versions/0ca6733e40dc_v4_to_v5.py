@@ -27,7 +27,7 @@ def upgrade(
     data_migration: bool = True,
     data_migration_options: Any = None,
 ) -> None:
-    op.create_table(
+    property_tbl = op.create_table(
         "property",
         sa.Column("key", sa.String(), nullable=False),
         sa.Column("value", sa.String(), nullable=False),
@@ -294,6 +294,8 @@ def upgrade(
             conn.execute(sa.insert(play_result_tbl), rows_to_insert)
 
     op.drop_table("scores_old")
+
+    op.execute(sa.insert(property_tbl).values(key="version", value="5"))
 
 
 def downgrade() -> None:

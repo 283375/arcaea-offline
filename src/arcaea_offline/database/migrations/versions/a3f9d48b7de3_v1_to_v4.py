@@ -268,6 +268,16 @@ def upgrade(
 
     op.drop_table("scores_old")
 
+    op.drop_table("properties", if_exists=True)
+    properties_tbl = op.create_table(
+        "properties",
+        sa.Column("key", sa.TEXT(), nullable=False),
+        sa.Column("value", sa.TEXT(), nullable=False),
+        sa.PrimaryKeyConstraint("key", name="pk_properties"),
+    )
+
+    op.execute(sa.insert(properties_tbl).values(key="version", value="4"))
+
 
 def downgrade() -> None:
     raise NotImplementedError(
