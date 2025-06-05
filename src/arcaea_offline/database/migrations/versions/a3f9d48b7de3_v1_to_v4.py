@@ -1,7 +1,7 @@
 """v1 to v4
 
 Revision ID: a3f9d48b7de3
-Revises:
+Revises: b7a0accfc17f
 Create Date: 2024-11-24 00:03:07.697165
 
 """
@@ -14,7 +14,7 @@ from alembic import context, op
 
 # revision identifiers, used by Alembic.
 revision: str = "a3f9d48b7de3"
-down_revision: Union[str, None] = None
+down_revision: Union[str, None] = "b7a0accfc17f"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
