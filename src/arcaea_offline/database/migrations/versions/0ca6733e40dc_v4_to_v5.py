@@ -15,7 +15,6 @@ from alembic import context, op
 
 from arcaea_offline.database.migrations.legacies.v5 import ForceTimezoneDateTime
 
-# revision identifiers, used by Alembic.
 revision: str = "0ca6733e40dc"
 down_revision: Union[str, None] = "a3f9d48b7de3"
 branch_labels: Union[str, Sequence[str], None] = None
