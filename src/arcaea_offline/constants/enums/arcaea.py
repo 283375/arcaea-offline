@@ -31,6 +31,13 @@ class ArcaeaPlayResultClearType(IntEnum):
     EASY_CLEAR = 5
 
 
+class ArcaeaLocalizationLanguage(Enum):
+    JA = "ja"
+    KO = "ko"
+    ZH_HANT = "zh-Hant"
+    ZH_HANS = "zh-Hans"
+
+
 class ArcaeaLanguage(Enum):
     EN = "en"
     JA = "ja"

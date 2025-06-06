@@ -1,5 +1,6 @@
 from .arcaea import (
     ArcaeaLanguage,
+    ArcaeaLocalizationLanguage,
     ArcaeaPlayResultClearType,
     ArcaeaPlayResultModifier,
     ArcaeaRatingClass,
@@ -8,6 +9,7 @@ from .arcaea import (
 
 __all__ = [
     "ArcaeaLanguage",
+    "ArcaeaLocalizationLanguage",
     "ArcaeaPlayResultClearType",
     "ArcaeaPlayResultModifier",
     "ArcaeaRatingClass",
