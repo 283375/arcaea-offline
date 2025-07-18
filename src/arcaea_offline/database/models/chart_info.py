@@ -28,6 +28,6 @@ class ChartInfo(ModelBase, ReprHelper):
     song_id: Mapped[str] = mapped_column(String, primary_key=True)
     rating_class: Mapped[int] = mapped_column(Integer, primary_key=True)
     constant: Mapped[Decimal] = mapped_column(Numeric, nullable=False)
-    notes: Mapped[int] = mapped_column(Integer)
+    notes: Mapped[Optional[int]] = mapped_column(Integer)
     added_at: Mapped[datetime] = mapped_column(ForceTimezoneDateTime, primary_key=True)
     version: Mapped[Optional[str]] = mapped_column(String)
