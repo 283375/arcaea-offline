@@ -1,8 +1,10 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, String
 from sqlalchemy.types import TypeDecorator
+
+from arcaea_offline.utils import Version
 
 
 class ForceTimezoneDateTime(TypeDecorator):
@@ -26,3 +28,23 @@ class ForceTimezoneDateTime(TypeDecorator):
         if value is not None:
             value = value.replace(tzinfo=timezone.utc)
         return value
+
+
+class VersionDatabaseType(TypeDecorator):
+    impl = String
+    cache_ok = True
+
+    def process_bind_param(self, value: Optional[Version], dialect):
+        if value is None:
+            return None
+
+        if not isinstance(value, Version):
+            raise ValueError("Input is not a Version instance.")
+
+        return str(f"{value.first}.{value.second}.{value.third}")
+
+    def process_result_value(self, value: Optional[str], dialect):
+        if value is None:
+            return None
+
+        return Version(*(map(int, value.split("."))))

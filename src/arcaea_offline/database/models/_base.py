@@ -4,10 +4,13 @@ from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm.exc import DetachedInstanceError
 
-from ._types import ForceTimezoneDateTime
+from arcaea_offline.utils import Version
+
+from ._types import ForceTimezoneDateTime, VersionDatabaseType
 
 TYPE_ANNOTATION_MAP = {
     datetime: ForceTimezoneDateTime,
+    Version: VersionDatabaseType,
 }
 
 
