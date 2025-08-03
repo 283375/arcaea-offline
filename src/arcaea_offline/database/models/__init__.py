@@ -4,6 +4,7 @@ from .config import Property
 from .difficulty import Difficulty, DifficultyLocalization
 from .pack import Pack, PackLocalization
 from .song import Song, SongLocalization
+from .version_date import VersionDate
 
 from .chart import Chart  # isort: skip
 from .play_result import (
@@ -29,4 +30,5 @@ __all__ = [
     "Property",
     "Song",
     "SongLocalization",
+    "VersionDate",
 ]
