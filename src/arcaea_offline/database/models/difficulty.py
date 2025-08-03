@@ -13,6 +13,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from arcaea_offline.utils import Version
+
 from ._base import ModelBase, ReprHelper
 from ._types import ForceTimezoneDateTime
 
@@ -65,7 +67,7 @@ class Difficulty(ModelBase, ReprHelper):
     bpm: Mapped[Optional[str]] = mapped_column(String)
     bpm_base: Mapped[Optional[Decimal]] = mapped_column(Numeric(asdecimal=True))
     added_at: Mapped[Optional[datetime]] = mapped_column(ForceTimezoneDateTime)
-    version: Mapped[Optional[str]] = mapped_column(String)
+    version: Mapped[Optional[Version]]
     is_legacy11: Mapped[bool] = mapped_column(
         Boolean, nullable=False, insert_default=False, server_default=text("0")
     )

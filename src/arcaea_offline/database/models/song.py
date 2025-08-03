@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING, Optional
 from sqlalchemy import Boolean, ForeignKey, Integer, Numeric, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from arcaea_offline.utils import Version
+
 from ._base import ModelBase, ReprHelper
 from ._types import ForceTimezoneDateTime
 
@@ -42,7 +44,7 @@ class Song(ModelBase, ReprHelper):
     added_at: Mapped[datetime] = mapped_column(
         ForceTimezoneDateTime, nullable=False, index=True
     )
-    version: Mapped[Optional[str]] = mapped_column(String)
+    version: Mapped[Optional[Version]]
 
     bpm: Mapped[Optional[str]] = mapped_column(String)
     bpm_base: Mapped[Optional[Decimal]] = mapped_column(Numeric(asdecimal=True))

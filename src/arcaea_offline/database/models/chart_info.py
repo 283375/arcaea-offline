@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING, Optional
 from sqlalchemy import ForeignKeyConstraint, Integer, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from arcaea_offline.utils import Version
+
 from ._base import ModelBase, ReprHelper
 from ._types import ForceTimezoneDateTime
 
@@ -30,4 +32,4 @@ class ChartInfo(ModelBase, ReprHelper):
     constant: Mapped[Decimal] = mapped_column(Numeric, nullable=False)
     notes: Mapped[Optional[int]] = mapped_column(Integer)
     added_at: Mapped[datetime] = mapped_column(ForceTimezoneDateTime, primary_key=True)
-    version: Mapped[Optional[str]] = mapped_column(String)
+    version: Mapped[Optional[Version]]
